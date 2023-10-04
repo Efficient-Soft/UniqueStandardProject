@@ -1,0 +1,323 @@
+﻿@page
+@model UniqueStandardProject.Areas.UserManage.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin | User Manage";
+    ViewData["pageTitle"] = "User Manage";
+    ViewData["pTitle"] = "Admin";
+    ViewData["pSubTitle"] = "Admin";
+}
+
+@section styles{
+    <!-- DataTables -->
+    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- Responsive datatable examples -->
+    <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/datatable-custom.css" rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-xl-6 col-lg-6 mb-lg-0 mb-md-3 mb-2">
+                <button id="btnCreate" type="button" class="btn btn-light"><i class="fa fa-plus-circle"></i>&nbsp;Create</button>
+                <button id="btnEdit" type="button" class="btn btn-light"><i class="fa fa-pen"></i>&nbsp;Edit</button>
+                <button id="btnExcel" type="button" class="btn btn-light"><i class="fa fa-file-excel"></i>&nbsp;Excel</button>
+            </div>
+            <div class="col-xl-6 col-lg-6">
+                <div class="input-group">
+                    <label class="input-group-text bg-light"><i class="bx bx-search"></i></label>
+                    <input id="txtSearch" class="form-control" type="text" placeholder="Search for something..." />
+                </div>
+                <span id="LblSearchCount" class="badge bg-light px-2 py-2 search-count"></span>
+            </div>
+        </div>
+        <table id="tblAdmin" class="table table-responsive nowrap w-100" cellspacing="0">
+            <thead class="bg-light">
+                <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Phone
+                    </th>
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<partial name="_vendor_scripts" />
+<partial name="_vendor_datatable_scripts" />
+<partial name="_UserModal" />
+
+<!-- JAVASCRIPT -->
+<script src="~/assets/js/app_sub.js"></script>
+
+<script src="~/jqueryui/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var table = $('#tblAdmin').DataTable({
+            scrollX: true,
+            responsive: false,
+            ordering: false,
+			ajax: function (data, callback, settings) {
+				$.ajax({
+                    url: "@Url.Content("~/")" + "api/users",
+				}).then(function (json) {
+					json["data"] = json["data"];
+					callback(json);
+				});
+			},
+			dom: '<"top"f>rt<"bottom"ilp><"clear">',
+			lengthMenu: [
+				[10, 25, 50, 100, -1],
+				['10', '25', '50', '100', 'All']
+			],
+			buttons: [{
+				extend: "excelHtml5",
+				className: "btn-success",
+				title: ('@ViewBag.pSubTitle' +' Report'+' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
+				exportOptions: {
+					orthogonal: "myExport", columns: 'th:not(:first-child)'
+				}
+            }],
+            columns: [
+                {
+                    defaultContent: '',
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
+                },
+                {
+                    data: null,
+                    width: '60px',
+                    responsivePriority: 1,
+                    render: function (data, type, row) {
+                        if (row.image == null) {
+                            return '<span class="avatar-title rounded-circle" style="width:40px;height:40px">' + row.fullName.substring(0, 1).toUpperCase() + '</span>'
+                        }
+                        else {
+                            return '<img src="../../../' + row.image + '" class="type-image" />'
+                        }
+                    }
+                },
+                {
+                    data: null,
+                    responsivePriority: 2,
+                    render: function (data, type, row) {
+                        return '<u class="font-size-14 text-primary">' + row.fullName + '</u>'
+                    }
+                },
+                {
+                    data: "email"
+                },
+                {
+                    data: "phone"
+                },
+                {
+                    data:"detailAddress"
+                },
+                {
+                    data: "status", render: function (data) {
+                        switch (data) {
+                            case true:
+                                return '<span class="font-size-11 btn-sm btn-success btn-rounded"><i class="fa fa-check"></i>&nbsp;Active</span>'
+                                break;
+                            case false:
+                                return '<span class="font-size-11 btn-sm btn-secondary btn-rounded"><i class="fa fa-minus-circle">&nbsp;Unactive</i></span>'
+                                break;
+                        }
+                    }
+                }
+            ],
+            columnDefs: [{ type: 'date-dd-mmm-yyyy', targets: 6 }],
+            "select": {
+                "style": 'os'
+            },
+            retrieve: true
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+            if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+        });
+
+        table.on('deselect', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
+        });
+
+        $('#btnCreate').click(function () {
+
+            $('#txtType').val('Create');
+            $('#OptionModelLabel').text('Create New User');
+            $('#userModel').modal('show');
+        });
+
+        $('#btnEdit').click(function () {
+            $('#txtType').val('Edit');
+            $('#OptionModelLabel').text('Update User');
+
+            //Hide password row
+            $('.pwRow').hide();
+
+            var selectedItem = table.rows({ selected: true }).data()[0];
+
+            if (selectedItem != null) {
+                console.log(selectedItem);
+
+                var url = "/api/users/" + selectedItem.userId;
+
+                $.getJSON(url, function (data) {
+                    var user = data["data"];
+                    $('#userId').val(user.userId);
+                    $('#txtUserName').val(user.userName);
+                    $('#txtUserName').prop('disabled', 'disabled');
+                    $('#txtFullName').val(user.fullName);
+                    $('#txtEmail').val(user.email);
+                    $('#txtPhone').val(user.phone);
+                    $('#txtAddress').val(user.detailAddress);
+                    $('#chkStatus').prop('checked', user.status);
+                });
+                $('#userModel').modal('show');
+            }
+        })
+
+        $('#btnUserSubmit').click(function () {
+            var userId = $('#userId').val();
+            var userName = $('#txtUserName').val();
+            var fullName = $('#txtFullName').val();
+            var email = $('#txtEmail').val();
+            var phone = $('#txtPhone').val();
+            var address = $('#txtAddress').val();
+            var password = $('#txtPassword').val();
+            var confirmPassword = $('#txtConfirmPassword').val();
+            var status = $('#chkStatus').is(":checked");
+
+            if ($('#txtType').val() == "Create") {
+
+                if (userName !== '' && fullName !== '' && email !== '' && phone !== '' && address !== '' && password !== '' && confirmPassword !== '' && status !== '') {
+
+                    $.ajax({
+                        url: '/api/users/create-user',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            UserId: userId,
+                            UserName: userName,
+                            FullName: fullName,
+                            Email: email,
+                            Phone: phone,
+                            DetailAddress: address,
+                            Password: password,
+                            ConfirmPassword: confirmPassword,
+                            Status: status
+                        },
+                        success: function (data) {
+                            notification('success', "User registration successfully!", "Successful");
+                            $('#userModel').modal('hide');
+                            table.ajax.reload();
+                            ResetItem();
+                        },
+                        error: function (data) {
+                            var response = data.responseJSON;
+                            if (response.error != null) {
+                                notification('error', response.error, 'Error');
+                            }
+                            else {
+                                notification('warning', response.message, 'Warning');
+                            }
+
+                            table.ajax.reload();
+                        },
+                        complete: function (data) {
+                            table.ajax.reload();
+                        }
+                    });
+
+                }
+                else {
+                    $('#usersform').addClass('was-validated');
+                }
+            }
+
+            else {
+                if (userName !== '' && fullName !== '' && email !== '' && phone !== '' && address !== '' && status !== '') {
+
+                    $.ajax({
+                        url: '/api/users/edit-user',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            UserId: userId,
+                            UserName: userName,
+                            FullName: fullName,
+                            Email: email,
+                            Phone: phone,
+                            DetailAddress: address,
+                            Status: status
+                        },
+                        success: function (data) {
+                            notification('success', "User info updated successfully!", "Successful");
+                            $('#userModel').modal('hide');
+                            ResetItem();
+                            table.ajax.reload();
+                        },
+                        error: function (data) {
+                            var response = data.responseJSON;
+                            if (response.error != null) {
+                                notification('error', response.error, 'Error');
+                            }
+                            else {
+                                notification('warning', response.message, 'Warning');
+                            }
+                        },
+                        complete: function (data) {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+                else {
+                    $('#usersform').addClass('was-validated');
+                }
+            }
+        });
+
+        $('#btnCancel').click(function () {
+            $('#usersform').removeClass('was-validated');
+            $('#userModel').modal('hide');
+            ResetItem();
+            table.ajax.reload();
+        });
+
+        function ResetItem() {
+            $('#txtUserName').val('');
+            $('#txtUserName').prop('disabled', false);
+            $('#txtFullName').val('');
+            $('#txtEmail').val('');
+            $('#txtPhone').val('');
+            $('#txtAddress').val('');
+            $('#txtPassword').val('');
+            $('#txtConfirmPassword').val('');
+            $('#chkStatus').prop('checked', true);
+        }
+    })
+</script>

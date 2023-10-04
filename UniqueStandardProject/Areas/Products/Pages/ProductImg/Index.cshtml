@@ -1,0 +1,170 @@
+﻿@page
+@model UniqueStandardProject.Areas.Products.Pages.ProductImg.IndexModel
+@{
+    ViewData["Title"] = "Index | ProductImg";
+    ViewData["pageTitle"] = "Dashboard";
+    ViewData["pTitle"] = "ProductImg";
+    ViewData["pSubTitle"] = "Products Img";
+}
+
+@section styles{
+    <!-- DataTables -->
+    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- Responsive datatable examples -->
+    <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Sweet Alert-->
+    <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/datatable-custom.css" rel="stylesheet" />
+
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+}
+
+
+<div class="row d-flex justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-xl-3 col-lg-6 mb-lg-0 mb-2">
+                        <button id="btnDelete" type="button" class="btn btn-light"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+                        <button id="btnExcel" type="button" class="btn btn-light"><i class="fa fa-file-excel"></i>&nbsp;Excel</button>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 mb-lg-0 mb-2 ">
+                        <select id="ddlProductImg" class="form-control form-select select2" required></select>
+                    </div>
+                    <div class="col-xl-4 offset-xl-2  col-lg-6">
+                        <div class="input-group">
+                            <label class="input-group-text bg-light"><i class="bx bx-search"></i></label>
+                            <input id="TxtSearch" class="form-control" type="text" placeholder="Search for something..." />
+                        </div>
+                        <span id="LblSearchCount" class="badge bg-light px-2 py-2 search-count"></span>
+                    </div>
+                </div>
+                <table id="tblProductImg" class="table dt-responsive  nowrap w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">#</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Image</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<partial name="_vendor_scripts" />
+<partial name="_vendor_datatable_scripts" />
+
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script src="~/assets/libs/select2/js/select2.min.js"></script>
+
+<!-- JAVASCRIPT -->
+<script src="~/assets/js/app_sub.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var table = $('#tblProductImg').DataTable({
+            scrollX: true,
+            responsive: false,
+			ajax: function (data, callback, settings) {
+				$.ajax({
+                    url: "@Url.Content("~/")" + "api/products/productImgList",
+				}).then(function (json) {
+					json["data"] = json["data"];
+					callback(json);
+				});
+			},
+			dom: '<"top"f>rt<"bottom"ilp><"clear">',
+			lengthMenu: [
+				[10, 25, 50, 100, -1],
+				['10', '25', '50', '100', 'All']
+            ],
+            buttons: [{
+				extend: "excelHtml5",
+				className: "btn-success",
+				title: ('@ViewBag.pSubTitle' +' Report'+' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
+				exportOptions: {
+					orthogonal: "myExport", columns: 'th:not(:first-child)'
+				}
+            }],
+			columns: [
+				{
+					defaultContent: '',
+					width: "2.5%",
+					render: function () {
+						return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+					},
+					ordering: false,
+					orderable: false,
+                },
+                { data: "imageId" },
+                { data: "product" },
+                { data: "title" },
+                {
+                    data: "img",
+                    render: function (data) {
+                        if (data == null) {
+                            return '<image src="/images/thumbnail.jpg" class="image-fluid type-image" />'
+                        }
+                        else {
+                            return '<image src="/' + data + '" class="image-fluid type-image" />'
+                        }
+                    }
+                },
+			],
+            order: [[1, "asc"]],
+			"select": {
+				"style": 'os'
+			},
+			retrieve: true
+		});
+
+		table.on('select', function (e, dt, type, indexes) {
+			$('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+			if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+		});
+
+		table.on('deselect', function (e, dt, type, indexes) {
+			$('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
+        });
+
+        $('#btnCreate').click(function () {
+            window.location.href = 'productImg/create';
+        });
+
+        $.getJSON("/api/products/productTitle", function (data) {
+            var states = data["data"];
+            var items = '';
+            items += "<option selected value='0'>ALL</option>";
+            $('#ddlProductImg').empty();
+            $.each(states, function (i, state) {
+                items += "<option class='select2-item' value='" + state.detailId + "'>" + state.title + "</option>";
+            });
+            $('#ddlProductImg').html(items);
+            $('#ddlProductImg').select2();
+        });
+
+        $('#ddlProductImg').change(function (e) {
+            console.log('DDL Change')
+
+            var id = $('#ddlProductImg').val();
+            url = "/api/products/ImgTitle?detailId=" + id;
+
+            console.log(url);
+
+            table.ajax.url(url);
+            table.ajax.reload();
+        });
+    });
+</script>

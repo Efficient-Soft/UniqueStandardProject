@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "crypto-js@4.1.1",
+      "destination": "wwwroot/lib/crypto-js/",
+      "files": [
+        "crypto-js.min.js",
+        "aes.min.js"
+      ]
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/select2/"
+    },
+    {
+      "library": "jquery@3.6.4",
+      "destination": "wwwroot/jquery/"
+    },
+    {
+      "library": "jqueryui@1.13.2",
+      "destination": "wwwroot/jqueryui/",
+      "files": [
+        "jquery-ui.min.js",
+        "jquery-ui.js"
+      ]
+    },
+    {
+      "library": "leaflet@1.9.4",
+      "destination": "wwwroot/lib/leaflet/"
+    },
+    {
+      "library": "leaflet-providers@1.13.0",
+      "destination": "wwwroot/lib/leaflet-providers/"
+    },
+    {
+      "library": "leaflet-routing-machine@3.2.12",
+      "destination": "wwwroot/lib/leaflet-routing-machine/"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+﻿<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between py-0 mt-n2 mb-3">
+            <h4 class="mb-0">
+
+                @if (ViewBag.pBackURL != null)
+                {
+                    <a href="#!" id="pBackUrl"><i class="fa fa-arrow-circle-left text-secondary"></i></a>
+                }
+
+                @*<a href="@ViewBag.pBackURL"><i class="fa fa-arrow-circle-left text-secondary"></i></a>*@
+
+                @if (ViewBag.pSubTitle != null)
+                {
+                    <span>@ViewBag.pSubTitle</span>
+                }
+                else
+                {
+                    <span>@ViewBag.pTitle</span>
+                }
+            </h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="/admin">@ViewBag.pageTitle</a></li>
+                    @if (ViewBag.pSubTitle != null)
+                    {
+                        <li class="breadcrumb-item">@ViewBag.pTitle</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active">@ViewBag.pTitle</li>
+                    }
+
+                    @*@if (ViewBag.pSubTitle != null)
+                        {
+                            <li class="breadcrumb-item active">@ViewBag.pSubTitle</li>
+                        }*@
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->

@@ -1,0 +1,110 @@
+﻿<div class="modal fade" id="userModel" tabindex="-1" role="dialog" aria-labelledby="myModalSelectOption" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+        <div class="modal-content border-0 ">
+            <input type="text" id="userId" hidden />
+            <input type="text" hidden id="txtType" />
+            <div class="modal-header bg-gray-light border-bottom border-primary border-2 py-2">
+                <h5 class="modal-title my-0" id="OptionModelLabel"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="usersform" method="dialog" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<div id="findUser" class="alert alert-danger">
+                        <span>This username is already taken.</span>
+                    </div>
+                    <div id="pwError" class="alert alert-danger">
+                        <span>Your password does not match the confirmation password.</span>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="txtUserName" class="form-label">User Name</label><br />
+                                <input id="txtUserName" type="text" name="UserName" class="form-control"
+                                       maxlength="20" placeholder="Enter username..." autocomplete="off" role="textbox" required>
+                                <div class="invalid-feedback">
+                                    Please type valid username. (Max Length: 10)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="formrow-fullname-input" class="form-label">Full Name</label><br />
+                                <input type="text" class="form-control" id="txtFullName" name="FullName" placeholder="Enter full name..." required>
+                                <div class="invalid-feedback">
+                                    Please type valid full name.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="formrow-email-input" class="form-label">Email</label><br />
+                                <input type="email" name="Email " class="form-control" id="txtEmail" placeholder="Enter email address..." required>
+                                <div class="invalid-feedback">
+                                    Please type email.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="formrow-phone-input" class="form-label">Phone Number</label><br />
+                                <input class="form-control" id="txtPhone" name="Phone" placeholder="Enter phone number" required>
+                                <div class="invalid-feedback">
+                                    Please type primary phone number.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="txtAddress" class="form-label">Detail Address</label><br />
+                                <textarea rows="5" id="txtAddress" name="DetailAddress" class="form-control" placeholder="Enter detail address..." required></textarea>
+                                <div class="invalid-feedback">
+                                    Please type detail address.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pwRow">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="formrow-password-input" id="lblPassword" class="form-label">Password</label>
+                                <input type="password" name="Password" class="form-control" id="txtPassword" minlength="8" placeholder="Enter password..." required>
+                                <div class="invalid-feedback" id="pwFeedback">
+                                    Please type valid password. (Min Length: 8)
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="formrow-conpassword-input" id="lblConfirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" name="ConfirmPassword" class="form-control" id="txtConfirmPassword" minlength="8" placeholder="Enter confirm password..." required>
+                                <div class="invalid-feedback" id="confirmpwFeedback">
+                                    Please type valid confirm password. (Min Length: 8)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-2">
+                            <label>Status</label>
+                            <div class="form-group">
+                                <div class="square-switch">
+                                    <input type="checkbox" id="chkStatus" switch="none" checked />
+                                    <label for="chkStatus" data-on-label="On" data-off-label="Off"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnUserSubmit" type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCancel">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

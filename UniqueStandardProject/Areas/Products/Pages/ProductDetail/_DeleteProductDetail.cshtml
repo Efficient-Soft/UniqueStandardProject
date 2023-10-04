@@ -1,0 +1,27 @@
+﻿<div class="modal fade" id="DeleteProductDetail" tabindex="-1" role="dialog" aria-labelledby="myModalSelectOption" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document" style="width:400px;height:250px;">
+        <div class="modal-content border-0">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="DeleteModalLabel"></h5>
+            </div>
+            <form method="dialog" id="deleteItemModal" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input hidden id="txtType" />
+
+                    <h5 class="">Are you sure want to delete?</h5>
+
+                    <label class="form-label">Product : </label>
+                    <label id="lblProduct" class="form-label" style="color: #ff4d4d;"></label><br />
+
+                    <label class="form-label">Title : </label>
+                    <label id="lblTitle" class="form-label" style="color: #ff4d4d;"></label><br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnDeleteConfirm" class="btn btn-danger">Delete</button>
+                    <button type="button" id="btnDeleteCancel" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
