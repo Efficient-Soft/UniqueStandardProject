@@ -1,9 +1,9 @@
 ﻿@page
 @model UniqueStandardProject.Areas.Products.Pages.Product.IndexModel
 @{
-    ViewData["Title"] = "Index | Product";
+    ViewData["Title"] = "Index | Products";
     ViewData["pageTitle"] = "Dashboard";
-    ViewData["pTitle"] = "Product";
+    ViewData["pTitle"] = "Products";
     ViewData["pSubTitle"] = "Products";
 }
 
@@ -43,6 +43,7 @@
                             <th scope="col">CreateDate</th>
                             <th scope="col">UpdateDate</th>
                             <th scope="col">UpdateUser</th>
+                            <th scope="col">Sort Order</th>
                         </tr>
                     </thead>
                 </table>
@@ -112,7 +113,8 @@
                         return getDateFormat(data);
                     }
                 },
-                { data: "updateUser" }
+                { data: "updateUser" },
+                { data: "sortOrder" }
 			],
             order: [[1, "asc"]],
 			"select": {
@@ -126,5 +128,18 @@
             const options = { year: 'numeric', month: 'short', day: 'numeric' };
             return new Date(dateString).toLocaleDateString(undefined, options);
         }
+
+        //search
+        $('#TxtSearch').keyup(function () {
+            table.search($(this).val()).draw();
+            if ($('#TxtSearch').val() == '') {
+                $('#LblSearchCount').hide();
+            }
+            else {
+                $('#LblSearchCount').show();
+            }
+            searchCount = table.rows({ search: 'applied' }).count();
+            $('#LblSearchCount').html('Result count: <b>' + searchCount + '</b>');
+        });
     })
 </script>

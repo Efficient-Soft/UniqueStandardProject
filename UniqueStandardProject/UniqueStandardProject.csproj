@@ -38,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Categories\Models\" />
     <Folder Include="wwwroot\images\productDetail\" />
     <Folder Include="wwwroot\images\productImg\" />
   </ItemGroup>

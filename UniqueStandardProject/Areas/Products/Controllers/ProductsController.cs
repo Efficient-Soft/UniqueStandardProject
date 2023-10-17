@@ -2,14 +2,18 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UniqueStandardProject.Areas.Products.Models;
 using UniqueStandardProject.Areas.UserManage.Models;
 using UniqueStandardProject.Data;
+using UniqueStandardProject.Entities;
+using UniqueStandardProject.Interfaces;
 
 namespace UniqueStandardProject.Areas.Products.Controllers
 {
@@ -19,12 +23,20 @@ namespace UniqueStandardProject.Areas.Products.Controllers
     {
         private readonly UniqueStandardDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IFileService _imageService;
 
-        public ProductsController(UniqueStandardDbContext context, IWebHostEnvironment hostEnvironment)
+        public ProductsController(UniqueStandardDbContext context, IWebHostEnvironment hostEnvironment, IFileService imageService)
         {
             _context = context;
             _hostingEnvironment = hostEnvironment;
+            _imageService = imageService;
         }
+
+        [BindProperty]
+        public IFormFile ImageFile { get; set; }
+
+        [BindProperty]
+        public string Base64String_Photo { get; set; }
 
         #region Products
         [HttpGet]
@@ -32,7 +44,8 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetProductList()
         {
-            var list = await _context.Products.ToListAsync();
+            var list = await _context.Products.OrderBy(p => p.SortOrder).ToListAsync();
+
             return Ok(new ResponseModel()
             {
                 Meta = new { total = list.Count },
@@ -55,12 +68,13 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                                                  DetailId = productdetail.DetailId,
                                                  ProductId = products.ProductId,
                                                  Product = products.Product1,
+                                                 SortOrder = productdetail.SortOrder,
                                                  Img = productdetail.Img,
                                                  Title = productdetail.Title,
                                                  Description = productdetail.Description
                                              };
 
-            List<ProductModel> list = (productId.HasValue) ? await query.Where(q => q.ProductId == productId.Value).ToListAsync() : await query.ToListAsync();
+            List<ProductModel> list = (productId.HasValue) ? await query.Where(q => q.ProductId == productId.Value).OrderBy(p => p.SortOrder).ToListAsync() : await query.ToListAsync();
 
             return Ok(new ResponseModel()
             {
@@ -98,6 +112,58 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             }
         }
 
+        [HttpPost("productDetail/edit")]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> EditProductDetail([FromForm] EditProductModel model)
+        {
+            Entities.ProductDetail productDetail = await _context.ProductDetails.Where(p => p.DetailId == model.DetailId && p.ProductId == model.ProductId).FirstOrDefaultAsync();
+            if (productDetail != null)
+            {
+                productDetail.SortOrder = model.SortOrder;
+                productDetail.Title = model.Title;
+                productDetail.Description = model.Desc;
+            }
+
+            ImageFile = model.Image;
+
+            if (ImageFile != null)
+            {
+                using var stream = new MemoryStream();
+                ImageFile.CopyTo(stream);
+                var bytes = stream.ToArray();
+                string image = Convert.ToBase64String(bytes);
+                Image image1 = Image.FromStream(stream);
+                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
+                productDetail.Img = $"images/productDetail/{productDetail.DetailId}-{productDetail.ProductId}{extension}";
+                _imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg","productDetail");
+            }
+            
+            _context.Attach(productDetail).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseModel()
+            {
+                Data = productDetail,
+                Success = true,
+                Code = StatusCodes.Status200OK
+            });
+        }
+
+       
+
+        [HttpGet("productDetail/Except")]
+        public async Task<IActionResult> GetExceptProductDetail(int productId, int detailId)
+        {
+            List<ProductDetail> productDetails = await _context.ProductDetails.Where(p => p.ProductId == productId && p.DetailId != detailId).ToListAsync();
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = productDetails.Count },
+                Data = productDetails
+            });
+        }
+
         #endregion
 
         #region ProductImg
@@ -118,7 +184,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                                                  Title = productdetail.Title,
                                              };
 
-            List<ProductModel> list = await query.ToListAsync();
+            List<ProductModel> list = await query.OrderBy(s => s.SortOrder).ToListAsync();
 
             return Ok(new ResponseModel()
             {
@@ -200,6 +266,34 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                 Meta = new { total_count = list.Count },
             });
         }
+
+        [HttpPost("deleteImg")]
+        public async Task<IActionResult> DeleteImages(int imageId)
+        {
+            Entities.ProductImg imageToDelete = _context.ProductImgs.FirstOrDefault(i => i.ImageId == imageId);
+
+            if (imageToDelete != null)
+            {
+                // Delete the image file from the server (if applicable)
+                string serverPathToDelete = Path.Combine(_hostingEnvironment.WebRootPath, imageToDelete.Img);
+
+                if (System.IO.File.Exists(serverPathToDelete))
+                {
+                    System.IO.File.Delete(serverPathToDelete);
+                }
+
+                // Delete the image from your data store (e.g., database)
+                _context.ProductImgs.Remove(imageToDelete);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new ResponseModel()
+            {
+                Code = StatusCodes.Status200OK,
+                Success = true,
+                Data = null,
+            });
+        }
         #endregion
 
         #region Master
@@ -220,7 +314,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         [HttpGet("distributorList")]
         public async Task<IActionResult> GetdistributorList()
         {
-            var list = await _context.Distributors.ToListAsync();
+            var list = await _context.Distributors.OrderBy(d => d.SortOrder).ToListAsync();
             return Ok(new ResponseModel()
             {
                 Meta = new { total = list.Count },
@@ -262,7 +356,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         [HttpGet("serviceList")]
         public async Task<IActionResult> GetServiceList()
         {
-            var list = await _context.ServiceTbls.ToListAsync();
+            var list = await _context.ServiceTbls.OrderBy(s => s.SortOrder).ToListAsync();
             return Ok(new ResponseModel()
             {
                 Meta = new { total = list.Count },
@@ -297,42 +391,114 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             }
         }
 
-        #endregion
-
-        [HttpPost("deleteImg")]
-        public IActionResult DeleteImages([FromForm] ProductImgModel model)
+        [HttpPost("service/edit")]
+        [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> EditService([FromForm] EditProductModel model)
         {
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            if (model.SelectedImages != null && model.SelectedImages.Any())
+            Entities.ServiceTbl service = await _context.ServiceTbls.Where(p => p.ServiceId == model.ServiceId).FirstOrDefaultAsync();
+            if (service != null)
             {
-                foreach (int imageId in model.SelectedImages)
-                {
-                    // Retrieve the image from your data store (e.g., a database)
-                    var imageToDelete = _context.ProductImgs.FirstOrDefault(i => i.ImageId == imageId);
-
-                    if (imageToDelete != null)
-                    {
-                        // Delete the image file from the server
-                        string imagePathToDelete = Path.Combine(_hostingEnvironment.WebRootPath, imageToDelete.Img);
-                        if (System.IO.File.Exists(imagePathToDelete))
-                        {
-                            System.IO.File.Delete(imagePathToDelete);
-                        }
-
-                        // Remove the image from your data store
-                        _context.ProductImgs.Remove(imageToDelete);
-                    }
-                }
-
-                // Save changes to the database
-                _context.SaveChanges();
+                service.SortOrder = model.SortOrder;
+                service.Title = model.Title;
+                service.Desctiption = model.Desc;
             }
 
-            return RedirectToAction("Index"); // Redirect to the image listing page
+            ImageFile = model.Image;
+
+            if (ImageFile != null)
+            {
+                using var stream = new MemoryStream();
+                ImageFile.CopyTo(stream);
+                var bytes = stream.ToArray();
+                string image = Convert.ToBase64String(bytes);
+                Image image1 = Image.FromStream(stream);
+                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
+                service.Img = $"images/service/{service.ServiceId}{extension}";
+                _imageService.WriteImage(image1, service.ServiceId.ToString(), $"{service.ServiceId}.jpg", "service");
+            }
+
+            _context.Attach(service).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseModel()
+            {
+                Data = service,
+                Success = true,
+                Code = StatusCodes.Status200OK
+            });
+        }
+
+        #endregion
+
+        #region RelatedItem
+        [HttpPost("relatedProduct")]
+        public async Task<IActionResult> GetRelated(int detailId, int detailId1)
+        {
+            var productDetail = await _context.ProductDetails.FirstOrDefaultAsync(p => p.DetailId == detailId);
+
+            List<string> relatedItem = new List<string>();
+
+            if (productDetail.RelatedId == null)
+            {
+                productDetail.RelatedId = detailId1.ToString();
+            }
+            else
+            {
+                relatedItem = productDetail.RelatedId.Split(",").ToList();
+
+                if (relatedItem.Contains(detailId1.ToString()))
+                {
+                    return BadRequest(new ResponseModel()
+                    {
+                        Success = true,
+                        Code = StatusCodes.Status400BadRequest,
+                        Meta = null,
+                        Data = null
+                    });
+                }
+                productDetail.RelatedId = productDetail.RelatedId + "," + detailId1.ToString();
+            }
+
+            _context.Attach(productDetail).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = null,
+                Data = productDetail
+            });
         }
 
 
+        [HttpGet("Related")]
+        public async Task<IActionResult> GetRelatedProduct(int detailId)
+        {
+            var query = from productDetails in _context.ProductDetails
+                        join products in _context.Products
+                        on productDetails.ProductId equals products.ProductId
+                        select new ProductModel()
+                        {
+                            DetailId = productDetails.DetailId,
+                            ProductId = productDetails.ProductId,
+                            Product = products.Product1,
+                            Img = productDetails.Img,
+                            Title = productDetails.Title,
+                            Description = productDetails.Description
+                        };
 
 
+            var productDetail = await query.FirstOrDefaultAsync(p => p.DetailId == detailId);
+
+            return Ok(new ResponseModel()
+            {
+                Data = productDetail,
+                Success = true,
+                Code = StatusCodes.Status200OK
+            });
+        }
+
+        #endregion 
     }
 }

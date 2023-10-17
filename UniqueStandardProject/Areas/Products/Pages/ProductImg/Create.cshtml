@@ -1,10 +1,10 @@
 ﻿@page
 @model UniqueStandardProject.Areas.Products.Pages.ProductImg.CreateModel
 @{
-    ViewData["Title"] = "Create |  Product Img";
+    ViewData["Title"] = "Create |  Products Img";
     ViewData["pageTitle"] = "Dashboard";
     ViewData["pTitle"] = "Products";
-    ViewData["pSubTitle"] = "Product Img";
+    ViewData["pSubTitle"] = "Products Img";
 }
 
 @section styles{
@@ -51,39 +51,53 @@
         <h4 class="card-title pb-0 mb-0">Create New Product</h4>
     </div>
     <div class="card-body">
-        <form method="post" class="needs-validation mb-4" novalidate enctype="multipart/form-data">
-            <div asp-validation-summary="All"></div>
-            <div class="row">
-                <div class="row">
-                    <div class="col-xl-6 col-md-3 mb-3">
-                        <p class="mb-2">Product: <span class="text-primary">@Model.productModel.Product</span></p>
-                    </div>
-                    <div class="col-xl-6 col-md-3 mb-3">
-                        <p class="mb-2">Title: <span class="text-primary">@Model.productModel.Title</span></p>
-                    </div>
-                </div>
-                <div class="row">
-                    @foreach (var image in Model.productModel.Images)
-                    {
-                        <div class="col-xl-2">
-                            <div class="card">
-                                <div class="card-body">
-                                    <input type="checkbox" name="selectedImages" value="@image.ImageId" />
-                                    <img src="~/@image.Img" style="width:100px;height:100px" alt="Image" />
-                                    <button class="btn btn-danger" onclick="deleteImage('@image.ImageId')">Delete</button>
-                                </div>
+        <div class="row mb-2">
+            <div class="col-xl-6 col-md-3 mb-3">
+                <p class="mb-2">
+                    Product:<span class="text-primary">
+                        @Model.productModel.Product
+                    </span>
+                </p>
+            </div>
+            <div class="col-xl-6 col-md-3 mb-3">
+                <p class="mb-2">
+                    Title:<span class="text-primary">@Model.productModel.Title</span>
+                </p>
+            </div>
+        </div>
+        <div class="row mb-3">
+            @if (Model.productModel.ImageLists != null)
+            {
+                @foreach (var image in Model.productModel.ImageLists)
+                {
+                    <div class="col-xl-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="~/@image.Image" style="width:100px;height:100px" alt="Image" />
+                                <button class="btn btn-danger mt-2" onclick="deleteImage('@image.ImageId')">Delete</button>
                             </div>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No image</span>
+            }
+        </div>
+        <form method="post" class="needs-validation mb-4" novalidate enctype="multipart/form-data">
+            <div asp-validation-summary="All"></div>
+            <input type="text" id="detailId" asp-for="@Model.productModel.DetailId" hidden />
+            @*<input type="text" asp-for="@Model.productModel.DetailId" id="TxtRelatedList" hidden />*@
+            <div class="row">
                 <div class="col-xxl-6 col-xl-6">
                     <div class="row">
                         <div class="col-12 mb-3">
                             <label>Sort Order</label>
-                            <input asp-for="Input.SortOrder" class="form-control" placeholder="Enter sort order..." required />
+                            <input asp-for="Input.SortOrder" class="form-control" placeholder="Enter sort order..." />
                             @*<div class="invalid-feedback">
-                                Please type sort order
-                            </div>*@
+                            Please type sort order
+                        </div>*@
                         </div>
                     </div>
                 </div>
@@ -131,8 +145,8 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" asp-route-detailId="@Model.productModel.DetailId"><i class="fa fa-save"></i>&nbsp;Create Product</button>
-            <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary" asp-route-detailId="@Model.productModel.DetailId"><i class="fa fa-save"></i>&nbsp;Add Image</button>
+            <a asp-page="/productDetail/Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
@@ -158,6 +172,11 @@
 <script src="~/assets/js/app_sub.js"></script>
 
 <script>
+    var detail_list = [];
+    var relatedList = [];
+    var sessionStorage_shop = window.sessionStorage.getItem('related_product') ?? '[]';
+    detail_list = JSON.parse(sessionStorage_shop);
+    console.log(detail_list);
     $(document).ready(function () {
 
         // GET QUERY String Value
@@ -256,42 +275,32 @@
             });
         });
 
-        ////Get Product
-        //$('#ddlProductImg').select2({
-        //    width: '100%',
-        //});
-
-        //$("#ddlProductImg").on("change", function () {
-        //    var selectedValue = $("#ddlProductImg").val();
-        //    alert("Selected value: " + selectedValue);
-        //});
-
-        //var url = "/api/products/productImg";
+        //var url = "/api/productDetail/Except?productId=" + productId + "&detailId=5";
         //$.getJSON(url, function (data) {
-        //    var products = data["data"];
+        //    var states = data["data"];
         //    var items = '';
         //    items += "<option selected disabled value=''>--Choose Product --</option>";
-        //    $('#ddlProductImg').empty();
-        //    $.each(products, function (i, product) {
-        //        items += "<option class='select2-item' value='" + product.productId + "'>" + product.title + "</option>";
+        //    $('#ddlDetail').empty();
+        //    $.each(states, function (i, detail) {
+        //        items += "<option class='select2-item' value='" + detail.detailId + "'>" + detail.title + "</option>";
         //    });
-        //    $('#ddlProductImg').html(items);
-
+        //    $('#ddlDetail').html(items);
+        //    $('#ddlDetail').val(productId).change();
+        //    $('#ddlDetail').prop('disabled', true);
         //});
-
-        
 
     });
 
+   
     function deleteImage(imageId) {
-        if (confirm("Are you sure you want to delete this image?")) {
+        var isConfirmed = confirm("Are you sure you want to delete this item?");
+        if (isConfirmed) {
             $.ajax({
-                url: '/api/products/deleteImg', // Replace with your controller action route
+                url: '/api/products/deleteImg?imageId=' + imageId,
                 type: 'POST',
-                data: { id: imageId },
                 success: function (result) {
                     if (result.success) {
-                        // Reload or update the image container to remove the deleted image
+                        notification('success', "Image has beeen Deleted!", "Successfully!");
                         location.reload(); // Example: Reloading the page
                     } else {
                         alert('Image deletion failed.');
@@ -301,6 +310,10 @@
                     alert('An error occurred while deleting the image.');
                 }
             });
+        } else {
+            // User clicked "Cancel" in the confirmation dialog
+            alert("Delete canceled.");
+            // You can handle the cancel action here
         }
     }
 </script>

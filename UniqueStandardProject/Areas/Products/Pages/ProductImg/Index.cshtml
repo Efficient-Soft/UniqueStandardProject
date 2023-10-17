@@ -28,14 +28,10 @@
         <div class="card">
             <div class="card-body">
                 <div class="row mb-2">
-                    <div class="col-xl-3 col-lg-6 mb-lg-0 mb-2">
-                        <button id="btnDelete" type="button" class="btn btn-light"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+                    <div class="col-xl-6 col-lg-6 mb-lg-0 mb-2">
                         <button id="btnExcel" type="button" class="btn btn-light"><i class="fa fa-file-excel"></i>&nbsp;Excel</button>
                     </div>
-                    <div class="col-xl-3 col-lg-6 mb-lg-0 mb-2 ">
-                        <select id="ddlProductImg" class="form-control form-select select2" required></select>
-                    </div>
-                    <div class="col-xl-4 offset-xl-2  col-lg-6">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="input-group">
                             <label class="input-group-text bg-light"><i class="bx bx-search"></i></label>
                             <input id="TxtSearch" class="form-control" type="text" placeholder="Search for something..." />
@@ -50,7 +46,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Product</th>
                             <th scope="col">Title</th>
-                            <th scope="col">Image</th>
+                            <th scope="col">Slide Image</th>
                         </tr>
                     </thead>
                 </table>
@@ -128,7 +124,20 @@
 				"style": 'os'
 			},
 			retrieve: true
-		});
+        });
+
+        //search
+        $('#TxtSearch').keyup(function () {
+            table.search($(this).val()).draw();
+            if ($('#TxtSearch').val() == '') {
+                $('#LblSearchCount').hide();
+            }
+            else {
+                $('#LblSearchCount').show();
+            }
+            searchCount = table.rows({ search: 'applied' }).count();
+            $('#LblSearchCount').html('Result count: <b>' + searchCount + '</b>');
+        });
 
 		table.on('select', function (e, dt, type, indexes) {
 			$('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
@@ -143,28 +152,28 @@
             window.location.href = 'productImg/create';
         });
 
-        $.getJSON("/api/products/productTitle", function (data) {
-            var states = data["data"];
-            var items = '';
-            items += "<option selected value='0'>ALL</option>";
-            $('#ddlProductImg').empty();
-            $.each(states, function (i, state) {
-                items += "<option class='select2-item' value='" + state.detailId + "'>" + state.title + "</option>";
-            });
-            $('#ddlProductImg').html(items);
-            $('#ddlProductImg').select2();
-        });
+        //$.getJSON("/api/products/productTitle", function (data) {
+        //    var states = data["data"];
+        //    var items = '';
+        //    items += "<option selected value='0'>ALL</option>";
+        //    $('#ddlProductImg').empty();
+        //    $.each(states, function (i, state) {
+        //        items += "<option class='select2-item' value='" + state.detailId + "'>" + state.title + "</option>";
+        //    });
+        //    $('#ddlProductImg').html(items);
+        //    $('#ddlProductImg').select2();
+        //});
 
-        $('#ddlProductImg').change(function (e) {
-            console.log('DDL Change')
+        //$('#ddlProductImg').change(function (e) {
+        //    console.log('DDL Change')
 
-            var id = $('#ddlProductImg').val();
-            url = "/api/products/ImgTitle?detailId=" + id;
+        //    var id = $('#ddlProductImg').val();
+        //    url = "/api/products/ImgTitle?detailId=" + id;
 
-            console.log(url);
+        //    console.log(url);
 
-            table.ajax.url(url);
-            table.ajax.reload();
-        });
+        //    table.ajax.url(url);
+        //    table.ajax.reload();
+        //});
     });
 </script>

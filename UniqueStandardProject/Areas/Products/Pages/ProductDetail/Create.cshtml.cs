@@ -55,11 +55,11 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                 ProductId = Input.ProductId,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
+                UpdateUser = User.Identity.Name,
                 Description = Input.Description,
                 Img = Input.Img,
                 SortOrder = Input.SortOrder,
-                Title = Input.Title,
-
+                Title = Input.Title
             };
             _context.ProductDetails.Add(productDetail);
 

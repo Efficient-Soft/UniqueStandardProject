@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
+using Newtonsoft.Json;
 using UniqueStandardProject.Areas.Products.Models;
 using UniqueStandardProject.Areas.UserManage.Models;
 using UniqueStandardProject.Data;
@@ -36,9 +37,12 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
         [BindProperty]
         public Entities.ProductImg Input { get; set; }
         public ProductImgModel productModel { get; set; }
+        public Entities.ProductDetail product { get; set; }
 
         [BindProperty]
         public string Base64String_Photo { get; set; }
+       // public List<string> Images { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int detailId)
         {
 
@@ -48,15 +52,35 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
             {
                 NotFound();
             }
-            productModel = new()
+
+            var imgs = _context.ProductImgs
+               .Where(img => img.DetailId == detailId).Select(v => new ImageList() { 
+                   ImageId = v.ImageId,
+                   Image = v.Img
+               }).ToList();
+
+            if(imgs.Count > 0)
             {
-                DetailId = productDetail.DetailId,
-                Product = _context.Products.FirstOrDefault(p => p.ProductId == productDetail.ProductId).Product1,
-                Title = productDetail.Title,
-                Images = _context.ProductImgs
-                    .Where(img => img.DetailId == detailId)
-                    .ToList()
-            };
+                productModel = new ProductImgModel()
+                {
+                    ImageId = _context.ProductImgs.FirstOrDefault(pi => pi.DetailId == detailId).ImageId,
+                    DetailId = detailId,
+                    Product = _context.Products.FirstOrDefault(p => p.ProductId == productDetail.ProductId).Product1,
+                    Title = productDetail.Title,
+                    ImageLists = imgs
+                };
+            }
+            else
+            {
+                productModel = new ProductImgModel()
+                {
+                    //ImageId = _context.ProductImgs.FirstOrDefault(pi => pi.DetailId == detailId).ImageId,
+                    DetailId = detailId,
+                    Product = _context.Products.FirstOrDefault(p => p.ProductId == productDetail.ProductId).Product1,
+                    Title = productDetail.Title
+                };
+
+            }
 
             return Page();
         }
@@ -79,6 +103,7 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
                 Img = Input.Img,
                 SortOrder = Input.SortOrder,
             };
+
             _context.ProductImgs.Add(productImg);
 
             if (await _context.SaveChangesAsync() > 0)

@@ -25,7 +25,6 @@ namespace UniqueStandardProject.Data
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Distributor> Distributors { get; set; }
         public virtual DbSet<MasterTbl> MasterTbls { get; set; }
         public virtual DbSet<Product> Products { get; set; }

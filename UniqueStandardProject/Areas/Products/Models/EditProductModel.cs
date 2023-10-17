@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace UniqueStandardProject.Areas.Products.Models
 {
-    public class ProductModel
+    public class EditProductModel
     {
-        public int ImageId { get; set; }
         public int DetailId { get; set; }
         public int ProductId { get; set; }
-        public string Product { get; set; }
+        public int ServiceId { get; set; }
         public string Title { get; set; }
-        public string Img { get; set; }
-        public string Description { get; set; }
+        public IFormFile Image { get; set; }
+        public string Desc { get; set; }
         public int? SortOrder { get; set; }
     }
 }

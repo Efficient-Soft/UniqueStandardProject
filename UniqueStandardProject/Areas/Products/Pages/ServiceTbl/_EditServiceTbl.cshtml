@@ -1,0 +1,64 @@
+﻿<div class="modal fade" id="EditService" tabindex="-1" role="dialog" aria-labelledby="myModalSelectOption" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content border-0">
+            <input type="text" id="serviceId" hidden />
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="DeleteModalLabel">Edit Service</h5>
+            </div>
+            <div class="modal-body">
+                <form id="usersform" method="dialog" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="formrow-fullname-input" class="form-label">Title</label><br />
+                                    <input type="text" class="form-control" id="txtTitle1" name="SortOrder" placeholder="Enter title..." required>
+                                    <div class="invalid-feedback">
+                                        Please type valid title.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="formrow-fullname-input" class="form-label">Sort Order</label><br />
+                                    <input type="text" class="form-control" id="txtSort" name="SortOrder" placeholder="Enter sort order..." required>
+                                    <div class="invalid-feedback">
+                                        Please type valid sort order.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="txtDescription" class="form-label">Description</label><br />
+                                    <textarea id="editor" class="txtDescription"></textarea>
+                                    <div class="invalid-feedback">
+                                        Please type Something
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3" id="image-container">
+                                <label>Image<b class="text-danger">*</b></label>
+
+                                <input type="file" id="fileToBeUploaded" name="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="loadFile(event)" />
+                                <img id="output" class="img-fluid mt-2 w-100 rounded-3" src="" style="height:285px" />
+
+                                <div class="invalid-feedback">
+                                    Please choose image.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnService" type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
