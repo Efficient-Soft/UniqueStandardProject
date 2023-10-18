@@ -164,8 +164,7 @@
                     width: "5%"
                 }
 			],
-            order: [[1, "asc"],
-                    [6, "asc"]],
+            order: [[1, "asc"]],
 			"select": {
 				"style": 'os'
 			},
@@ -233,7 +232,7 @@
             var productId = $('#productId').val();
             var sortOrder = $('#txtSortOrder').val();
             var title = $('#txtTitle').val();
-            var desc = tinyMCE.activeEditor.getContent({ format: 'text' });
+            var desc = tinymce.activeEditor.getContent();
             console.log(desc);
             var productDetail = $('#ddlProductDetail option:selected').val();
 

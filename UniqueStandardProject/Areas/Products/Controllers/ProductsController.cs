@@ -138,7 +138,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                 _imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg","productDetail");
             }
             
-            _context.Attach(productDetail).State = EntityState.Modified;
+            _context.Entry(productDetail).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return Ok(new ResponseModel()

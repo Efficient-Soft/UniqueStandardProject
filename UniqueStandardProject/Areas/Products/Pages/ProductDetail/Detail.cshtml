@@ -24,26 +24,88 @@
 
 <form method="post" id="related_form">
     <div class="row">
-        <div class="col-xl-4 col-md-3 mb-3">
-            <label class="form-label">Product : </label>
-            <label id="originProduct" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.Product</label><br />
-            <img src="~/@Model.relatedModel.Image" style="width:100px;height:100px" alt="Image" />
+        <div class="col-md-6">
+            <div class="col-xl-4 col-md-3 mb-3">
+                <label class="form-label">Product : </label>
+                <label id="originProduct" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.Product</label><br />
+                <img src="~/@Model.relatedModel.Image" style="width:100px;height:100px" alt="Image" />
+            </div>
+            <div class="col-md-12 mb-3">
+                <label class="form-label">Title : </label>
+                <label id="originTitle" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.title</label><br />
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Description : </label>
+                <label id="originDesc" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.Description</label><br />
+            </div>
         </div>
-        <div class="col-xl-4 col-md-3 mb-3">
-            <label class="form-label">Title : </label>
-            <label id="originTitle" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.title</label><br />
+        @*<div class="col-md-6 mb-3">
+                <div class="card">
+                    <h3 class="ps-md-3 mt-2">Related Items</h3>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (Model.ImageList != null)
+                            {
+                                @foreach (var image in Model.ImageList)
+                                {
+                                    <div class="col-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <img src="~/@image" style="width:150px;height:150px" alt="Image" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <span>No image</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        <div class="col-md-6">
+            <div class="row">
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        @{int i = 0;}
+                        @if (Model.ImageList != null)
+                        {
+                            @foreach (var image in Model.ImageList)
+                            {
+                                i++;
+                                <ul class="carousel-indicators">
+                                    <li data-target="#carouselExampleControls" data-slide-to="@i" class="@(i == 1 ? "active" : "")"></li>
+                                </ul>
+                                <div class="carousel-item @(i == 1 ? "active" : "")">
+                                    <img src="~/@image" style="width:100%;height:250px;" alt="Slide">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5 style="color:red">@Model.relatedModel.title</h5>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="col-xl-4">
-        <label class="form-label">Description : </label>
-        <label id="originDesc" class="form-label" style="color: #ff4d4d;">@Model.relatedModel.Description</label><br />
-    </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
+    </div><br />
+
+    <div class="row mb-3">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-5 mb-3">
+                        <div class="col-md-12 mb-3">
                             <div class="form-group">
                                 <label class="control-label">Related Product :</label>
                                 <select id="ddlRelated" class="form-control form-select select2"></select>
@@ -58,55 +120,28 @@
                             <label class="form-label">Product : </label>
                             <label id="lblProduct" class="form-label" style="color: #ff4d4d;"></label><br />
                         </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-xl-6 col-md-3 mb-3">
                             <label class="form-label">Title : </label>
                             <label id="lblTitle" class="form-label" style="color: #ff4d4d;"></label><br />
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-12">
+                        <div class="col-xl-6 col-md-3">
                             <label class="form-label">Description : </label>
                             <label id="lblDesc" class="form-label" style="color: #ff4d4d;"></label><br />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-xl-2">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div id="image">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-6 mb-3">
+        <div class="col-md-6">
             <div class="card">
-                <h3 class="ps-md-3 mt-2">Already Related Items</h3>
                 <div class="card-body">
-                    <div class="row">
-                        @if (Model.ImageList != null)
-                        {
-                            @foreach (var image in Model.ImageList)
-                            {
-                                <div class="col-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <img src="~/@image" style="width:150px;height:150px" alt="Image" />
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <span>No image</span>
-                        }
+                    <div id="image">
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -187,9 +222,13 @@
             });
         });
 
-        //$('#btnRemove').click(function () {
-        //    window.location.href = '/products';
-        //});
+        $('.carousel-control-prev').click(function () {
+            $('#carouselExampleControls').carousel('prev');
+        });
+
+        $('.carousel-control-next').click(function () {
+            $('#carouselExampleControls').carousel('next');
+        });
 
     });
 </script>

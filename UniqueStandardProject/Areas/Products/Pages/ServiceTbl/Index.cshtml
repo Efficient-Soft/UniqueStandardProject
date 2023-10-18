@@ -230,7 +230,7 @@
             var serviceId = $('#serviceId').val();
             var title = $('#txtTitle1').val();
             var sortOrder = $('#txtSort').val();
-            var desc = tinyMCE.activeEditor.getContent({ format: 'text' });
+            var desc = tinyMCE.activeEditor.getContent();
             var formData = new FormData();
             var file = $('#fileToBeUploaded')[0];
             formData.append('serviceId', serviceId);

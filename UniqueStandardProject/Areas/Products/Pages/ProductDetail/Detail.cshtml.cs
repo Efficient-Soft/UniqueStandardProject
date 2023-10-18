@@ -46,9 +46,13 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
 
                 foreach (var id in values)
                 {
-                    var relatedImage = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id)) .Img;
-                    ImageList.Add(relatedImage);
-                    
+                    var result = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id));
+                    if (result != null)
+                    {
+                        var relatedImage = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id)).Img;
+                        ImageList.Add(relatedImage);
+                    }
+                   
                 }
 
                 relatedModel = new()
