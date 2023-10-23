@@ -29,9 +29,11 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
             _imageService = imageService;
         }
 
-        public List<string> ImageList { get; set; }
-
+        //public List<string> ImageList { get; set; }
+        //public List<string> TitleList { get; set; }
+        public ImageModel imageModels { get; set; }
         public RelatedModel relatedModel { get; set; }
+        public ProductModel ProductModel { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int detailId)
         {
@@ -41,18 +43,29 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
             {
                 string input = productDetail.RelatedId;
                 string[] values = input.Split(',');
+                imageModels = new ImageModel();
+                imageModels.Images = new List<relatedImage>();
 
-                ImageList = new List<string>();
-
-                foreach (var id in values)
+                for (var id = 0; id < values.Length; id++)
                 {
-                    var result = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id));
+
+                    var result = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(values[id]));
                     if (result != null)
                     {
-                        var relatedImage = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id)).Img;
-                        ImageList.Add(relatedImage);
+                        //var relatedImage = _context.ProductDetails.FirstOrDefault(p => p.DetailId == Convert.ToInt32(id));
+                        var relatedImage = _context.ProductDetails
+                            .Where(img => img.DetailId == Convert.ToInt32(values[id])).Select(v => new relatedImage()
+                            {
+                                Img = v.Img,
+                                ImgTitle = v.Title
+                            }).ToList();
+
+                        if (relatedImage.Count > 0)
+                        {
+                            imageModels.Images.AddRange(relatedImage);
+                        }
                     }
-                   
+                    
                 }
 
                 relatedModel = new()
@@ -75,6 +88,9 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                     title = productDetail.Title,
                     Description = Regex.Replace(productDetail.Description, "<.*?>", String.Empty)
                 };
+
+                imageModels = null;
+
             }
 
             return Page();
