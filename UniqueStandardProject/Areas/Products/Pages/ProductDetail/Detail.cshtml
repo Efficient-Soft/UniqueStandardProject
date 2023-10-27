@@ -18,6 +18,7 @@
 
     <!-- Sweet Alert-->
     <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
     <link href="~/css/datatable-custom.css" rel="stylesheet" />
 
     <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
@@ -171,7 +172,7 @@
 <script src="~/lib/cropperjs/cropper.js" type="text/javascript"></script>
 <script src="~/lib/jquery-cropper/jquery-cropper.js" type="text/javascript"></script>
 
-@*<script src="~/assets/js/app_sub.js"></script>*@
+<script src="~/assets/js/app_sub.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -188,7 +189,7 @@
                 items += "<option class='select2-item' value='" + detail.detailId + "'>" + detail.title + "</option>";
             });
             $('#ddlRelated').html(items);
-            $('#ddlRelated').val(detailId).change();
+            //$('#ddlRelated').val(detailId).change();
         });
 
         $('#ddlRelated').change(function (e) {

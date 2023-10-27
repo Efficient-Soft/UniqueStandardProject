@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\frontend\images\" />
     <Folder Include="wwwroot\images\productDetail\" />
     <Folder Include="wwwroot\images\productImg\" />
   </ItemGroup>
