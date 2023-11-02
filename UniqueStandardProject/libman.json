@@ -38,5 +38,5 @@
       "library": "leaflet-routing-machine@3.2.12",
       "destination": "wwwroot/lib/leaflet-routing-machine/"
     }
-  ]
+]
 }

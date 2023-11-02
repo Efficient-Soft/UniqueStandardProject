@@ -303,8 +303,10 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             var list = await _context.MasterTbls.ToListAsync();
             return Ok(new ResponseModel()
             {
-                Meta = new { total = list.Count },
-                Data = list
+                Code = StatusCodes.Status200OK,
+                Success = true,
+                Data = list,
+                Meta = new { total_count = list.Count },
             });
         }
         #endregion
@@ -359,7 +361,9 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             var list = await _context.ServiceTbls.OrderBy(s => s.SortOrder).ToListAsync();
             return Ok(new ResponseModel()
             {
-                Meta = new { total = list.Count },
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = list.Count },
                 Data = list
             });
         }

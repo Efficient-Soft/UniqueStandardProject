@@ -93,6 +93,7 @@ namespace UniqueStandardProject
             // UserManager & RoleManager require logging and HttpContext dependencies
             services.AddLogging();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,8 +111,11 @@ namespace UniqueStandardProject
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseHttpsRedirection();
+
             app.UseCookiePolicy();
 
             app.UseRouting();
