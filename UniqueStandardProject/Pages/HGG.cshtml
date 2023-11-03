@@ -2,56 +2,8 @@
 @model UniqueStandardProject.Pages.HGGModel
 @{
     ViewData["Title"] = "Home Page";
-    Layout = "Shared/_BlankLayout.cshtml";
 }
 
-<!-- Customized Bootstrap Stylesheet -->
-<link href="~/frontend/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Libraries Stylesheet -->
-<link href="~/frontend/lib/animate/animate.min.css" rel="stylesheet">
-<link href="~/frontend/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-<link href="~/frontend/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-<!-- Template Stylesheet -->
-<link href="~/frontend/css/style.css" rel="stylesheet">
-
-<!-- Spinner Start -->
-<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
-<!-- Spinner End -->
-
-<!-- Topbar Start -->
-<div class="container-fluid bg-light p-0">
-    <div class="row gx-0 d-none d-lg-flex">
-        <div class="col-lg-7 px-5 text-start">
-            <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                <small class="fa fa-map-marker-alt text-primary me-2"></small>
-                <small>123 Street, New York, USA</small>
-            </div>
-            <div class="h-100 d-inline-flex align-items-center py-3">
-                <small class="far fa-clock text-primary me-2"></small>
-                <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
-            </div>
-        </div>
-        <div class="col-lg-5 px-5 text-end">
-            <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                <small class="fa fa-phone-alt text-primary me-2"></small>
-                <small>+012 345 6789</small>
-            </div>
-            <div class="h-100 d-inline-flex align-items-center">
-                <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-sm-square bg-white text-primary me-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                <a class="btn btn-sm-square bg-white text-primary me-0" href=""><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Topbar End -->
 <!-- Service Start -->
 <div class="container-xxl py-5">
     <div class="container">
@@ -63,20 +15,6 @@
     </div>
 </div>
 <!-- Service End -->
-<!-- JavaScript Libraries -->
-<script src="~/frontend/js/jquery-3.2.1.min.js"></script>
-<script src="~/frontend/js/bootstrap.bundle.js"></script>
-<script src="~/frontend/lib/wow/wow.min.js"></script>
-<script src="~/frontend/lib/easing/easing.min.js"></script>
-<script src="~/frontend/lib/waypoints/waypoints.min.js"></script>
-<script src="~/frontend/lib/counterup/counterup.min.js"></script>
-<script src="~/frontend/lib/owlcarousel/owl.carousel.min.js"></script>
-<script src="~/frontend/lib/tempusdominus/js/moment.min.js"></script>
-<script src="~/frontend/lib/tempusdominus/js/moment-timezone.min.js"></script>
-<script src="~/frontend/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<!-- Template Javascript -->
-<script src="~/frontend/js/main.js"></script>
 
 <script>
     var url = 'api/products/productDetail?productId=2';
@@ -110,7 +48,7 @@
                     <p class="name" style="color:primary; font-size: 20px;width: 100%;"><center>${player.title}</center></p>
                 </div>`;
         });
-        item.insertAdjacentHTML('afterBegin', html);
+        item.innerHTML = html;
     };
 
 </script>

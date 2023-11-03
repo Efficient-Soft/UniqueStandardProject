@@ -314,7 +314,8 @@
 
 /*** Footer ***/
 .footer {
-    background: linear-gradient(rgba(0, 0, 0, .9), rgba(0, 0, 0, .9)), url(../img/carousel-bg-1.jpg) center center no-repeat;
+    background-color: #65995C;
+    /*background: linear-gradient(rgba(0, 0, 0, .9), rgba(0, 0, 0, .9));*/
     background-size: cover;
 }
 
@@ -380,4 +381,11 @@
     margin-right: 0;
     padding-right: 0;
     border-right: none;
+}
+
+.Client_img {
+    width: 100px;
+    opacity: 0.5;
+    transition: 0.3s;
+    padding: 15px 0;
 }

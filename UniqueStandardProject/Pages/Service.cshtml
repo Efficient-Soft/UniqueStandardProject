@@ -16,3 +16,40 @@
     </div>
 </div>
 <!-- Service End -->
+
+<script>
+    var url = 'api/products/serviceList';
+
+    var item = document.getElementById('service');
+
+    fetch(url)
+        .then((res) => res.json())
+        .then((response) => {
+            console.log(response);
+            if (response.success) {
+                if (Array.isArray(response.data)) {
+                    generateHtml(response.data);
+                } else {
+                    console.error('The data received is not an array.');
+                }
+            } else {
+                console.error('Request was not successful.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
+    const generateHtml = (data) => {
+        var html = ``;
+        data.forEach((player) => {
+            html +=
+                `<div class="col-md-4">
+                    <img src="${player.img}" style="width: 100%; height: 300px; object-fit: cover;">
+                    <p class="name" style="color:primary; font-size: 20px;width: 100%;"><center>${player.title}</center></p>
+                </div>`;
+        });
+        document.getElementById('service').innerHTML = html;
+    };
+
+</script>
