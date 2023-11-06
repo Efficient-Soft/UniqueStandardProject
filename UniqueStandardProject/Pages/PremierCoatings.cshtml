@@ -41,10 +41,13 @@
         var item = document.getElementById('premier');
         var html = ``;
         data.forEach((player) => {
+            var detailUrl = `/Detail?title=${encodeURIComponent(player.title)}&description=${encodeURIComponent(player.description)}`;
             html +=
                 `<div class="col-md-4">
-                    <img src="${player.img}" style="width: 100%; height: 300px; object-fit: cover;" onclick="<a asp-page="./Detail" class="dropdown-item text-success"></a>" />
-                    <p class="name" style="color:primary; font-size: 20px;width: 100%;"><center>${player.title}</center></p>
+                      <a href="${detailUrl}">
+                      <img src="${player.img}" style="width: 100%; height: 300px; object-fit: cover;" />
+                        </a>
+                 <p class="name" style="color: primary; font-size: 20px; width: 100%; text-align: center;">${player.title}</p>
                 </div>`;
         });
 

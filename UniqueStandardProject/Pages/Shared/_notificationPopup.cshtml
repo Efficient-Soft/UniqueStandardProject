@@ -1,0 +1,31 @@
+﻿
+<div class="dropdown d-inline-block">
+    <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="bx bx-bell" id="notificationIcon" data-bs-toggle="tooltip" data-bs-placement="left" title="Notification"></i>
+        <span class="badge bg-danger rounded-pill" id="noti_count"></span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+         aria-labelledby="page-header-notifications-dropdown">
+        <div class="p-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h6 class="m-0" key="t-notifications"> Notifications </h6>
+                </div>
+                <div class="col-auto">
+                    <a href="#!" class="small noti-right-bar-toggle" key="t-view-all"> View All</a>
+                    @*<button type="button" class="small noti-right-bar-toggle" key="t-view-all">View All</button>*@
+                </div>
+            </div>
+        </div>
+
+        <div data-simplebar style="max-height: 300px">
+            <div id="notificationPanel"></div>
+        </div>
+
+        <div class="p-3 text-center bg-light bg-opacity-25" id="notificationPanelPlaceholder">
+            <span class="text-muted">No notification received.</span>
+        </div>
+
+    </div>
+</div>

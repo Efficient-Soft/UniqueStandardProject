@@ -1,0 +1,42 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="myModalLogout" tabindex="-1" role="dialog" aria-labelledby="myModalLogout" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content border-0 ">
+			<div class="modal-header bg-white border-bottom border-danger border-2 py-2">
+				<h5 class="modal-title text-danger my-0" id="exampleModalLongTitle">Logout Confirmation</h5>
+			</div>
+			<div class="modal-body">
+				<input type="text" id="delete_citemid" hidden />
+				<label class="form-label">Are you sure to want to logout?</label>
+				<div class="row mt-2">
+					<div class="col-12">
+						<button type="submit" id="logoutconfirmButton" class="btn btn-danger">Logout</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="logoutcancelButton">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$('#logoutconfirmButton').click(function () {
+			$.ajax({
+				type: "POST",
+				url: "@Url.Content("~/")" + "api/action/logout",
+				success: function (data) {
+					setTimeout(notification('success', 'Logged out successfully.', 'Success !!!'), 1000);
+					console.log(data);
+					$('#myModalLogout').modal('hide');
+					setTimeout(window.location.replace('/logout'), 1000);
+					window.localStorage.removeItem('current_conversation');
+				},
+				error: function (data) {
+					//console.log(data);
+					//notification('error', data['responseJSON']['errors']['message'], 'Error !!!');
+					$('#myModalLogout').modal('hide');
+				}
+			});
+		});
+	});
+</script>
