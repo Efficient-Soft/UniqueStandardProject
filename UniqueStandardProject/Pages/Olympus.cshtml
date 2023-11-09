@@ -46,12 +46,13 @@
 
     const generateHtml = (data) => {
         var olympus = document.getElementById('olympus');
+        data.sort((a, b) => a.sortOrder - b.sortOrder);
         var html = ``;
         data.forEach((player) => {
             html +=
-                `<div class="col-md-4">
-                    <img src="${player.img}" style="width: 100%; height: 300px; object-fit: cover;">
-                    <p class="name" style="color:primary; font-size: 20px;width: 100%;"><center>${player.title}</center></p>
+                `<div class="col-md-3">
+                    <img src="${player.img}" class="shadow p-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                    <p class="name" style="color:primary; font-size: 15px;width: 100%;"><center>${player.title}</center></p>
                 </div>`;
         });
 

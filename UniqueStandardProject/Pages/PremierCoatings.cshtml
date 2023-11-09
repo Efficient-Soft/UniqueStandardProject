@@ -6,7 +6,7 @@
 
 <style>
     img {
-        border-radius: 10px;
+        border-radius: 10%;
     }
 </style>
 
@@ -45,15 +45,16 @@
 
     const generateHtml = (data) => {
         var item = document.getElementById('premier');
+        data.sort((a, b) => a.sortOrder - b.sortOrder);
         var html = ``;
         data.forEach((player) => {
             var detailUrl = `/Detail?title=${encodeURIComponent(player.title)}&description=${encodeURIComponent(player.description)}`;
             html +=
-                `<div class="col-md-4">
+                `<div class="col-md-3">
                       <a href="${detailUrl}">
-                      <img src="${player.img}" style="width: 100%; height: 300px; object-fit: cover;" />
+                      <img src="${player.img}" class="shadow p-3 mb-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;" />
                         </a>
-                 <p class="name" style="color: primary; font-size: 20px; width: 100%; text-align: center;">${player.title}</p>
+                 <p class="name" style="color: primary; font-size: 15px; width: 100%; text-align: center;">${player.title}</p>
                 </div>`;
         });
 

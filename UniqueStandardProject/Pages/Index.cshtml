@@ -25,9 +25,75 @@
             background-color: #ddd;
         }
 
-        img{
-            border-radius:10px;
+    .image:hover {
+        border-radius: 50px;
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+
+    #portfolio {
+        background: #fff;
+        padding: 30px 0;
+    }
+
+        #portfolio .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            transition: all ease-in-out 0.4s;
         }
+
+        #portfolio .portfolio-item {
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+            #portfolio .portfolio-item h2 {
+                color: #ffffff;
+                font-size: 24px;
+                margin: 0;
+                text-transform: capitalize;
+                font-weight: 700;
+            }
+
+            #portfolio .portfolio-item img {
+                transition: all ease-in-out 0.4s;
+                width: 100%;
+            }
+
+            #portfolio .portfolio-item:hover img {
+                -webkit-transform: scale(1.1);
+                transform: scale(1.1);
+            }
+
+            #portfolio .portfolio-item:hover .portfolio-overlay {
+                opacity: 1;
+                background: rgba(0, 0, 0, 0.7);
+            }
+
+        #portfolio .portfolio-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+    /*--Olympus--*/
+    .Olympus_img {
+        width: 270px !important;
+        height: 200px !important;
+        object-fit: cover !important;
+        margin: 5px;
+    }
    
 </style>
 
@@ -90,47 +156,17 @@
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h1 class="mb-5">Our Project</h1>
         </div>
-        <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s" id="project">
+        <div class="row no-gutters wow fadeInUp" data-wow-delay="0.3s" id="project">
         </div>
     </div>
 </div>
 <!-- Service End -->
-
-@*<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-            </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-            </a>
-        </li>
-    </ul>
-</nav>*@
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center" id="pagination">
     </ul>
 </nav>
 
-    <!-- Service Start -->
-    <div class="container-xxl service py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            </div>
-            <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s" id="project">
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
     <!-- Testimonial Start -->
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
@@ -265,9 +301,9 @@
                         if (Array.isArray(response.data)) {
                             displayImage(response.data);
                             setupPagination(response.data);
-                            displayPageInfo();
+                            /*displayPageInfo();*/
                         } else {
-                            console.error('The data received is not an array.');
+                            console.error('The data received is not an array.');  
                         }
                     } else {
                         console.error('Request was not successful.');
@@ -290,17 +326,22 @@
                     const end = currentPage * itemsPerPage;
 
                     for (let i = start; i < end && i < images.length; i++) {
+                        images.sort((a, b) => a.sortOrder - b.sortOrder);
+                        let sort = images[i].sortOrder;
+                        console.log(sort);
                         html +=
-                            `<div class="col-md-4">
-                                 <img src="${images[i].img}" style="width: 100%; height: 250px; object-fit: cover;">
-                                <p class="name" style="text-color:primary; font-size: 20px;width: 100%;"><center>${images[i].title}</center></p>
+                            `<div class="portfolio-item wow fadeInUp col-md-4">
+                                <a href="${images[i].img}" class="portfolio-popup">
+                                 <img src="${images[i].img}" class="shadow p-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                                 <div class="portfolio-overlay">
+                                </div>
+                                </a>
+                                <p class="name" style="text-color:primary; font-size: 15px;width: 100%;"><center>${images[i].title}</center></p>
                           </div>`;
                     }
 
                     product.innerHTML = html;
-                } else {
-                    console.error('No images found.');
-                }
+                } 
             }
 
             function setupPagination(images) {
@@ -330,9 +371,7 @@
                         li.appendChild(a);
                         pagination.appendChild(li);
                     }
-                } else {
-                    console.error('No images found.');
-                }
+                } 
             }
 
             displayImage(currentPage);
@@ -379,11 +418,6 @@
 
         });
 
-        function displayPageInfo() {
-            const pageInfo = document.getElementById('page-info');
-            const totalPages = Math.ceil(response.data.length / itemsPerPage);
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-        }
     </script>
 
 

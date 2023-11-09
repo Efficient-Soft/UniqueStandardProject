@@ -82,10 +82,10 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
             {
                 relatedModel = new()
                 {
-                    DetailId = productDetail.DetailId,
-                    Image = productDetail.Img,
+                    DetailId = detailId,
+                    Image = _context.ProductDetails.FirstOrDefault(p => p.DetailId == detailId).Img,
                     Product = _context.Products.FirstOrDefault(p => p.ProductId == productDetail.ProductId).Product1,
-                    title = productDetail.Title,
+                    title = _context.ProductDetails.FirstOrDefault(p => p.DetailId == detailId).Title,
                     Description = Regex.Replace(productDetail.Description, "<.*?>", String.Empty)
                 };
 
