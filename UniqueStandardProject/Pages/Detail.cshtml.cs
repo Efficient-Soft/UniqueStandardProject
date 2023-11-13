@@ -11,9 +11,10 @@ namespace UniqueStandardProject.Pages
 {
     public class DetailModel : PageModel
     {
-        public IActionResult OnGet(string title, string description)
+        public IActionResult OnGet(int detailId , string title, string description)
         {
-            string desc = Regex.Match(description, @"<strong>(.*?)</strong>").Groups[1].Value;
+            string desc = Regex.Match(description, @"<p>(.*?)</p>").Groups[1].Value;
+            ViewData["Id"] = detailId;
             ViewData["title"] = title;
             ViewData["description"] = desc; 
 

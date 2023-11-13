@@ -85,8 +85,8 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                     DetailId = detailId,
                     Image = _context.ProductDetails.FirstOrDefault(p => p.DetailId == detailId).Img,
                     Product = _context.Products.FirstOrDefault(p => p.ProductId == productDetail.ProductId).Product1,
-                    title = _context.ProductDetails.FirstOrDefault(p => p.DetailId == detailId).Title,
-                    Description = Regex.Replace(productDetail.Description, "<.*?>", String.Empty)
+                    title = _context.ProductDetails.FirstOrDefault(p => p.DetailId == detailId).Title
+                    //Description = Regex.Replace(productDetail.Description, "<.*?>", String.Empty)
                 };
 
                 imageModels = null;

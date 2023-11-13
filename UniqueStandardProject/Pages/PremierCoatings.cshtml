@@ -7,6 +7,7 @@
 <style>
     img {
         border-radius: 10%;
+        object-fit:cover;
     }
 </style>
 
@@ -48,7 +49,7 @@
         data.sort((a, b) => a.sortOrder - b.sortOrder);
         var html = ``;
         data.forEach((player) => {
-            var detailUrl = `/Detail?title=${encodeURIComponent(player.title)}&description=${encodeURIComponent(player.description)}`;
+            var detailUrl = `/Detail?detailId=${encodeURIComponent(player.detailId)}&title=${encodeURIComponent(player.title)}&description=${encodeURIComponent(player.description)}`;
             html +=
                 `<div class="col-md-3">
                       <a href="${detailUrl}">
