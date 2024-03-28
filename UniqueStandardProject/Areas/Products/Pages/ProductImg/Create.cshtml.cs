@@ -4,13 +4,16 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
+
 using Newtonsoft.Json;
+
 using UniqueStandardProject.Areas.Products.Models;
 using UniqueStandardProject.Areas.UserManage.Models;
 using UniqueStandardProject.Data;
@@ -41,7 +44,7 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
 
         [BindProperty]
         public string Base64String_Photo { get; set; }
-       // public List<string> Images { get; set; }
+        // public List<string> Images { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int detailId)
         {
@@ -54,12 +57,13 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
             }
 
             var imgs = _context.ProductImgs
-               .Where(img => img.DetailId == detailId).Select(v => new ImageList() { 
+               .Where(img => img.DetailId == detailId).Select(v => new ImageList()
+               {
                    ImageId = v.ImageId,
                    Image = v.Img
                }).ToList();
 
-            if(imgs.Count > 0)
+            if (imgs.Count > 0)
             {
                 productModel = new ProductImgModel()
                 {
@@ -92,11 +96,6 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
                 ModelState.AddModelError("", "Product Image is required.");
             }
 
-            if (!string.IsNullOrEmpty(Base64String_Photo))
-            {
-                Input.Img = $"images/productImg/{Input.ImageId}-{detailId}.jpg";
-            }
-
             Entities.ProductImg productImg = new()
             {
                 DetailId = detailId,
@@ -114,7 +113,16 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
                     MemoryStream ms = new(bytes);
                     Image image = Image.FromStream(ms);
                     ms.Close();
-                    _imageService.WriteImage(image, $"{productImg.ImageId}-{detailId}", $"{Input.ImageId}-{detailId}.jpg", "productImg");
+                    if (_imageService.WriteImage(image, $"{productImg.ImageId}-{detailId}", $"{productImg.ImageId}-{detailId}.jpg", "productImg"))
+                    {
+                        var existingProductImg = await _context.ProductImgs.FirstOrDefaultAsync(x => x.ImageId == productImg.ImageId && x.DetailId == productImg.DetailId);
+                        if (existingProductImg != null)
+                        {
+                            existingProductImg.Img = $"images/productImg/{existingProductImg.ImageId}-{existingProductImg.DetailId}.jpg";
+                            _context.Entry(existingProductImg).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
                 }
 
                 return RedirectToPage("./Index");

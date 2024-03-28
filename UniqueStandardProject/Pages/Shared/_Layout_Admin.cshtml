@@ -8,37 +8,63 @@
     @*//1*@
     @RenderSection("styles", false)
     @await Html.PartialAsync("_head_css.cshtml")
+    <style>
+        .navbar-light .navbar-nav .nav-link{
+            font-size:14px;
+        }
+
+        .navbar-light .navbar-nav .nav-link.active{
+            color: seagreen;
+            font-weight:600;
+            border:1px solid seagreen;
+            border-radius:5px;
+        }
+    </style>
 </head>
 <body>
-    <div>
+    <!-- Begin page -->
+    <div id="layout-wrapper">
         <!-- Navbar Start -->
-        <nav class="navbar navbar-expand-md bg-white navbar-light shadow sticky-top p-0 mt-3 mb-5">
+        <nav class="navbar navbar-expand-md bg-white navbar-light shadow sticky-top p-0 mb-3">
             <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
                 <img src="~/frontend/img/BunnerLogo.png" style="width:200px;" />
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav">
-                    <a asp-page="/Index" class="nav-item nav-link active text-success">Home</a>
-                    <div class="nav-item dropdown">
+                <div class="navbar-nav gap-1">
+                    <a asp-page="/Dashboard" class="nav-item nav-link px-xl-3 px-4">Home</a>
+                    <a asp-page="/Admin" asp-area="UserManage" class="nav-item nav-link px-xl-3 px-4">Admin</a>
+                    <a asp-page="/Product/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Product</a>
+                    <a asp-page="/ProductDetail/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Product Detail</a>
+                    <a asp-page="/Distributor/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Distributor</a>
+                    <a asp-page="/ServiceTbl/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Service</a>
+                   @*  <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-success" data-bs-toggle="dropdown">Products</a>
                         <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
                             <a asp-page="/Admin" asp-area="UserManage" class="dropdown-item" key="t-admin">Admin</a>
                             <a asp-page="/MasterTbl/Index" asp-area="Products" class="dropdown-item" key="t-admin">Master</a>
-                            <a asp-page="/Product/Index" asp-area="Products" class="dropdown-item" key="t-admin">Product</a>
+                            <a asp-page="/Product/Index" asp-area="Products" class="dropdown-item" key="t-products">Product</a>
                             <a asp-page="/ProductDetail/Index" asp-area="Products" class="dropdown-item" key="t-admin">Product Detail</a>
                             <a asp-page="/Distributor/Index" asp-area="Products" class="dropdown-item" key="t-admin">Distributor</a>
                             <a asp-page="/ServiceTbl/Index" asp-area="Products" class="dropdown-item" key="t-admin">Service</a>
                         </div>
-                    </div>
+                    </div> *@
                 </div>
-                @*<a href="" class="btn btn-success py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>*@
             </div>
         </nav>
         <!-- Navbar End -->
-        @RenderBody()
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+        </div>
     </div>
 </body>
 </html>

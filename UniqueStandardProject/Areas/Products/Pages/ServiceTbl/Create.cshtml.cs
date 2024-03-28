@@ -4,9 +4,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+
 using UniqueStandardProject.Data;
 using UniqueStandardProject.Interfaces;
 
@@ -44,11 +47,6 @@ namespace UniqueStandardProject.Areas.Products.Pages.ServiceTbl
                 ModelState.AddModelError("", "Product Image is required.");
             }
 
-            if (!string.IsNullOrEmpty(Base64String_Photo))
-            {
-                Input.Img = $"images/service/{Input.ServiceId}.jpg";
-            }
-
             Entities.ServiceTbl service = new()
             {
                 ServiceId = Input.ServiceId,
@@ -70,7 +68,16 @@ namespace UniqueStandardProject.Areas.Products.Pages.ServiceTbl
                     MemoryStream ms = new(bytes);
                     Image image = Image.FromStream(ms);
                     ms.Close();
-                    _imageService.WriteImage(image, $"{service.ServiceId}", $"{service.ServiceId}.jpg", "service");
+                    if (_imageService.WriteImage(image, $"{service.ServiceId}", $"{service.ServiceId}.jpg", "service"))
+                    {
+                        var existingService = await _context.ServiceTbls.FirstOrDefaultAsync(x => x.ServiceId == service.ServiceId);
+                        if (existingService != null)
+                        {
+                            existingService.Img = $"images/service/{existingService.ServiceId}.jpg";
+                            _context.Entry(existingService).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
                 }
 
                 return RedirectToPage("./Index");

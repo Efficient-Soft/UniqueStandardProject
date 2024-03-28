@@ -373,10 +373,12 @@
                 for (let i = start; i < end && i < images.length; i++) {
                     images.sort((a, b) => a.sortOrder - b.sortOrder);
                     let sort = images[i].sortOrder;
-                    console.log(sort);
+                    
+                    var detailUrl = `/Detail?detailId=${encodeURIComponent(images[i].detailId)}&title=${encodeURIComponent(images[i].title)}&description=${encodeURIComponent(images[i].description)}`;
+                    console.log(detailUrl);
                     html +=
                         `<div class="portfolio-item wow fadeInUp col-md-4">
-                                <a href="${images[i].img}" class="portfolio-popup">
+                                    <a href="${detailUrl}" class="portfolio-popup">
                                  <img src="${images[i].img}" class="shadow p-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;">
                                  <div class="portfolio-overlay">
                                 </div>

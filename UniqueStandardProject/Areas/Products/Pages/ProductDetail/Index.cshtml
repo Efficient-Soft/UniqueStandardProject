@@ -8,7 +8,7 @@
     Layout = "_Layout_Admin";
 }
 
-@section styles{
+@section styles {
     <!-- DataTables -->
     <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -27,18 +27,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <div class="row mb-2">
-                    <div class="col-xl-4 col-lg-6 mb-lg-0 mb-2">
+                <div class="row">
+                    <div class="col-auto">
                         <button id="btnCreate" type="button" class="btn btn-light"><i class="fa fa-plus-circle"></i>&nbsp;Create</button>
                         <button id="btnEdit" type="button" class="btn btn-light"><i class="fa fa-pen"></i>&nbsp;Edit</button>
                         <button id="btnDelete" type="button" class="btn btn-light"><i class="fa fa-trash"></i>&nbsp;Delete</button>
                     </div>
-                    <div class="col-xl-4 col-lg-6 mb-lg-0 mb-2 ">
-                        <select id="ddlProduct" class="form-control form-select select2" required></select>
+                    <div class="col-md-4">
+                        <select id="ddlProduct" class="form-control select2"></select>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="input-group">
                             <label class="input-group-text bg-light"><i class="bx bx-search"></i></label>
                             <input id="TxtSearch" class="form-control" type="text" placeholder="Search for something..." />
@@ -107,30 +105,30 @@
         var table = $('#tblProductDetail').DataTable({
             scrollX: true,
             responsive: false,
-			ajax: url,
-			dom: '<"top"f>rt<"bottom"ilp><"clear">',
-			lengthMenu: [
-				[10, 25, 50, 100, -1],
-				['10', '25', '50', '100', 'All']
+            ajax: url,
+            dom: '<"top"f>rt<"bottom"ilp><"clear">',
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                ['10', '25', '50', '100', 'All']
             ],
             buttons: [{
-				extend: "excelHtml5",
-				className: "btn-success",
-				title: ('@ViewBag.pSubTitle' +' Report'+' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
-				exportOptions: {
-					orthogonal: "myExport", columns: 'th:not(:first-child)'
-				}
+                extend: "excelHtml5",
+                className: "btn-success",
+                title: ('@ViewBag.pSubTitle' + ' Report' + ' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
+                exportOptions: {
+                    orthogonal: "myExport", columns: 'th:not(:first-child)'
+                }
             }],
-			columns: [
-				{
-					defaultContent: '',
-					width: "2.5%",
-					render: function () {
-						return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
-					},
-					ordering: false,
-					orderable: false,
-				},
+            columns: [
+                {
+                    defaultContent: '',
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
+                },
                 { data: "detailId" },
                 { data: "productId" },
                 { data: "product" },
@@ -164,12 +162,12 @@
                     },
                     width: "5%"
                 }
-			],
+            ],
             order: [[1, "asc"]],
-			"select": {
-				"style": 'os'
-			},
-			retrieve: true
+            "select": {
+                "style": 'os'
+            },
+            retrieve: true
         });
 
         //search
@@ -185,18 +183,19 @@
             $('#LblSearchCount').html('Result count: <b>' + searchCount + '</b>');
         });
 
-		table.on('select', function (e, dt, type, indexes) {
-			$('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
-			if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
-		});
+        table.on('select', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+            if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+        });
 
-		table.on('deselect', function (e, dt, type, indexes) {
-			$('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
+        table.on('deselect', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
         });
 
         $('#btnCreate').click(function () {
             let productId = $('#ddlProduct').val();
-            window.location.href = `productDetail/Create?productId=${productId}`;
+            if (productId !== undefined && productId!=='' && productId !== null)
+                window.location.href = `productDetail/Create?productId=${productId}`;
         });
 
         //Update user modal popup
@@ -246,7 +245,7 @@
             formData.append('desc', desc);
             formData.append('productDetail', productDetail);
             formData.append('image', file.files[0]);
-            
+
             //Save product
 
             if ($('#txtType').val() == "Edit") {
@@ -300,7 +299,7 @@
                 });
             }
         });
-            //#endregion
+        //#endregion
 
         //btngem cancel
         $('#btnCancel').click(() => {
@@ -380,7 +379,7 @@
                 }
             });
         });
-            //#endregion
+        //#endregion
     });
 
     tinymce.init({
