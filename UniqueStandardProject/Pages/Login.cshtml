@@ -50,9 +50,9 @@
                                     <span>Account is currently disabled!</span>
                                 </div>
 
-                                <div class="alert alert-danger" id="divError">
+                              @*   <div class="alert alert-danger" id="divError">
                                     <span id="divNotificationError" class=""><i class="fa fa-info-circle"></i>&nbsp; Notificaiton service must allow for this site.</span>
-                                </div>
+                                </div> *@
 
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
@@ -100,18 +100,18 @@
 <script>
 
     $(document).ready(function () {
-        $('#btnSubmit').attr('disabled', 'disabled');
+        // $('#btnSubmit').attr('disabled', 'disabled');
         $('#invalidUser').hide();
         $('#disableUser').hide();
 
-        if (Notification.permission != "denied" && Notification.permission != "default") {
-            $('#divNotificationError').hide();
-        }
+        // if (Notification.permission != "denied" && Notification.permission != "default") {
+        //     $('#divNotificationError').hide();
+        // }
 
-        if (Notification.permission != "denied" && Notification.permission != "default") {
-            $('#divError').hide();
-            $('#btnSubmit').removeAttr('disabled');
-        }
+        // if (Notification.permission != "denied" && Notification.permission != "default") {
+        //     $('#divError').hide();
+        //     $('#btnSubmit').removeAttr('disabled');
+        // }
 
         if ("@TempData["InvalidMessage"]" != "") {
             $('#invalidUser').show();

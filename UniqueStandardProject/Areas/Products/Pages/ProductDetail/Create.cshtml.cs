@@ -4,9 +4,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+
 using UniqueStandardProject.Data;
 using UniqueStandardProject.Interfaces;
 
@@ -45,10 +48,7 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                 ModelState.AddModelError("", "Product Image is required.");
             }
 
-            if (!string.IsNullOrEmpty(Base64String_Photo))
-            {
-                Input.Img = $"images/productDetail/{Input.DetailId}-{Input.ProductId}.jpg";
-            }
+
 
             Entities.ProductDetail productDetail = new()
             {
@@ -71,7 +71,16 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                     MemoryStream ms = new(bytes);
                     Image image = Image.FromStream(ms);
                     ms.Close();
-                    _imageService.WriteImage(image, $"{productDetail.DetailId}-{Input.ProductId}", $"{productDetail.DetailId}-{Input.ProductId}.jpg", "productDetail");
+                    if (_imageService.WriteImage(image, $"{productDetail.DetailId}-{Input.ProductId}", $"{productDetail.DetailId}-{Input.ProductId}.jpg", "productDetail"))
+                    {
+                        var existingProductDetail = await _context.ProductDetails.FirstOrDefaultAsync(x => x.DetailId == productDetail.DetailId && x.ProductId == productDetail.ProductId);
+                        if (existingProductDetail != null)
+                        {
+                            existingProductDetail.Img = $"images/productDetail/{existingProductDetail.DetailId}-{existingProductDetail.ProductId}.jpg";
+                            _context.Entry(existingProductDetail).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
                 }
 
                 return RedirectToPage("./Index");
