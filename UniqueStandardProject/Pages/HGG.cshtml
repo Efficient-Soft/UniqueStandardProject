@@ -6,7 +6,7 @@
 
 <style>
     img {
-        border-radius:10px;
+        border-radius: 10px;
     }
 </style>
 
@@ -14,7 +14,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <img src="~/frontend/img/hgg.png"/>
+            <img src="~/frontend/img/hgg.png" />
             <img src="~/frontend/img/special.png" />
             <h4>
                 HGG is the global leader in 3D profiling solutions. We are known worldwide for our high-end and innovate cutting machinery.
@@ -54,10 +54,13 @@
         data.sort((a, b) => a.sortOrder - b.sortOrder);
         var html = ``;
         data.forEach((player) => {
+            var detailUrl = `/Detail?detailId=${encodeURIComponent(player.detailId)}&title=${encodeURIComponent(player.title)}`;
             html +=
                 `<div class="col-md-3">
-                    <img src="${player.img}" class="shadow p-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;">
-                    <p class="name" style="color:primary; font-size: 15px;width: 100%;"><center>${player.title}</center></p>
+                        <a href="${detailUrl}">
+                            <img src="${player.img}" class="shadow p-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;" />
+                        </a>
+                        <p class="name" style="color:primary; font-size: 15px;width: 100%;"><center>${player.title}</center></p>
                 </div>`;
         });
         item.innerHTML = html;

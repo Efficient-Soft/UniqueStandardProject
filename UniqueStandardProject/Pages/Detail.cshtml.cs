@@ -1,22 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using UniqueStandardProject.Model;
+using Microsoft.EntityFrameworkCore;
+
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+using UniqueStandardProject.Data;
 
 namespace UniqueStandardProject.Pages
 {
     public class DetailModel : PageModel
     {
-        public IActionResult OnGet(int detailId , string title, string description)
+        private readonly UniqueStandardDbContext _context;
+        public DetailModel(UniqueStandardDbContext context)
         {
-            string desc = Regex.Match(description, @"<p>(.*?)</p>").Groups[1].Value;
+            _context = context;
+        }
+        public async Task<IActionResult> OnGetAsync(int detailId, string title, string description)
+        {
             ViewData["Id"] = detailId;
             ViewData["title"] = title;
-            ViewData["description"] = desc; 
+
+            Entities.ProductDetail productDetail = await _context.ProductDetails.FirstOrDefaultAsync(x => x.DetailId == detailId);
+
+            ViewData["description"] = productDetail.Description;
 
             return Page();
         }
