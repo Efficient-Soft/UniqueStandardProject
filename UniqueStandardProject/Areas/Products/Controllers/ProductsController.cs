@@ -503,6 +503,84 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
-        #endregion 
+        #endregion
+
+        #region Activity
+        [HttpGet("activity")]
+        public async Task<IActionResult> GetActivity()
+        {
+            var activityList = await _context.Activities.OrderBy(a => a.SortOrder).ToListAsync();
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new {total_count = activityList.Count},
+                Data = activityList
+            });
+        }
+
+        [HttpPost("activity/edit")]
+        public async Task<IActionResult> EditActivity([FromForm] EditActivityModel model)
+        {
+            Entities.Activity activity = await _context.Activities.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityId);
+            if(activity != null)
+            {
+                activity.Title = model.Title;
+                activity.SortOrder = model.SortOrder;
+            }
+
+            ImageFile = model.Image;
+
+            if(ImageFile != null)
+            {
+                using var stream = new MemoryStream();
+                ImageFile.CopyTo(stream);
+                var bytes = stream.ToArray();
+                string image = Convert.ToBase64String(bytes);
+                Image image1 = Image.FromStream(stream);
+                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
+                activity.Img = $"images/activity/{activity.ActivityId}{extension}";
+                _imageService.WriteImage(image1, activity.ActivityId.ToString(), $"{activity.ActivityId}.jpg", "activity");
+            }
+
+            _context.Attach(activity).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseModel()
+            {
+                Data = activity,
+                Success = true,
+                Code = StatusCodes.Status200OK
+            });
+
+        }
+
+        [HttpPost("activity/delete")]
+        public async Task<IActionResult> DeleteActivity(int activityId)
+        {
+            var activity = await _context.Activities.FindAsync(activityId);
+
+            if(activity != null)
+            {
+                _context.Activities.Remove(activity);
+                await _context.SaveChangesAsync();
+                return Ok(new ResponseModel()
+                {
+                    Message = "Successfully Deleted!",
+                    Success = true,
+                    Code = StatusCodes.Status200OK
+                });
+            }
+            else
+            {
+                return BadRequest(new ResponseModel()
+                {
+                    Success = false,
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Unsuccessfully!"
+                });
+            }
+        }
+        #endregion
     }
 }

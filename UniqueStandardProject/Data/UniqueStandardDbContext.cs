@@ -18,6 +18,7 @@ namespace UniqueStandardProject.Data
         {
         }
 
+        public virtual DbSet<Activity> Activities { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -32,6 +33,16 @@ namespace UniqueStandardProject.Data
         public virtual DbSet<ProductImg> ProductImgs { get; set; }
         public virtual DbSet<ServiceTbl> ServiceTbls { get; set; }
         public virtual DbSet<UserInfo> UserInfos { get; set; }
+        public virtual DbSet<WeldingTraining> WeldingTrainings { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=UniqueStandard;Trusted_Connection=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

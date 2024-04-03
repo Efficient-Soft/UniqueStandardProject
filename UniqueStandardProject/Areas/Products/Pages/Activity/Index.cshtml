@@ -1,0 +1,280 @@
+﻿@page
+@model UniqueStandardProject.Areas.Products.Pages.Activity.IndexModel
+@{
+    ViewData["Title"] = "Index | Activity";
+    ViewData["pageTitle"] = "Dashboard";
+    ViewData["pTitle"] = "Activity";
+    ViewData["pSubTitle"] = "Activity";
+    Layout = "_Layout_Admin";
+}
+
+@section styles {
+    <!-- DataTables -->
+    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- Responsive datatable examples -->
+    <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Sweet Alert-->
+    <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/datatable-custom.css" rel="stylesheet" />
+
+}
+
+<div class="row d-flex justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-xl-6 col-lg-6 mb-lg-0 mb-2">
+                        <button id="btnCreate" type="button" class="btn btn-light"><i class="fa fa-plus-circle"></i>&nbsp;Create</button>
+                        <button id="btnEdit" type="button" class="btn btn-light"><i class="fa fa-pen"></i>&nbsp;Edit</button>
+                        <button id="btnDelete" type="button" class="btn btn-light"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="input-group">
+                            <label class="input-group-text bg-light"><i class="bx bx-search"></i></label>
+                            <input id="TxtSearch" class="form-control" type="text" placeholder="Search for something..." />
+                        </div>
+                        <span id="LblSearchCount" class="badge bg-light px-2 py-2 search-count"></span>
+                    </div>
+                </div>
+                <table id="tblService" class="table dt-responsive  nowrap w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">#</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">SortOrder</th>
+                            <th scope="col">CreateDate</th>
+                            <th scope="col">UpdateDate</th>
+                            <th scope="col">UpdateUser</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<partial name="_vendor_scripts" />
+<partial name="_vendor_datatable_scripts" />
+<partial name="_EditActivity" />
+<partial name="_DeleteActivity" />
+
+<!-- Validation JAVASCRIPT -->
+
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+
+<!-- Cropper JS -->
+<script src="~/lib/cropperjs/cropper.js" type="text/javascript"></script>
+<script src="~/lib/jquery-cropper/jquery-cropper.js" type="text/javascript"></script>
+
+<script src="~/assets/js/app_sub.js"></script>
+
+<script>
+    //#region preload image
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+    //#endregion
+
+    $(document).ready(function () {
+        var url = "/api/products/activity";
+
+        var table = $('#tblActivity').DataTable({
+            scrollX:true,
+            responsive:false,
+            ajax:url,
+            dom: '<"top"f>rt<"bottom"ilp><"clear">',
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                ['10', '25', '50', '100', 'All']
+            ],
+            buttons: [{
+                extend: "excelHtml5",
+                className: "btn-success",
+                title: ('@ViewBag.pSubTitle' + ' Report' + ' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
+                exportOptions: {
+                    orthogonal: "myExport", columns: 'th:not(:first-child)'
+                }
+            }],
+            columns:[
+                {
+                    defaultContent: '',
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
+                },
+                {data:"activityId"},
+                {data:"img",
+                    render: function (data) {
+                        if (data == null) {
+                            return '<image src="/images/thumbnail.jpg" class="image-fluid type-image" />'
+                        }
+                        else {
+                            return '<image src="/' + data + '" class="image-fluid type-image" />'
+                        }
+                    }
+                },
+                {data:"title"},
+                {data:"sortOrder"},
+                {data:"createDate"},
+                {data:"updateDate"},
+                {data:"updateUser"},
+            ],
+            order: [[1, "asc"]],
+            "select": {
+                "style": 'os'
+            },
+            retrieve: true
+        });
+
+        //search
+        $('#TxtSearch').keyup(function () {
+            table.search($(this).val()).draw();
+            if ($('#TxtSearch').val() == '') {
+                $('#LblSearchCount').hide();
+            }
+            else {
+                $('#LblSearchCount').show();
+            }
+            searchCount = table.rows({ search: 'applied' }).count();
+            $('#LblSearchCount').html('Result count: <b>' + searchCount + '</b>');
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+            if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+        });
+
+        table.on('deselect', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
+        });
+
+        $('#btnCreate').click(function () {
+            window.location.href = `activity/create`;
+        });
+
+        $('#btnEdit').click(function () {
+            $('#OptionModelLabel').text('Update Activity');
+            $('#txtType').val('Edit');
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            console.log(selectedItem);
+            var image = '/images/thumbnail.jpg';
+            if (selectedItem != null) {
+                $('#activityId').val(selectedItem.activityId);
+                $('#txtTitle').val(selectedItem.title);
+                $('#txtSortOrder').val(selectedItem.sortOrder);
+                $('#EditActivity').modal('show');
+
+                if (selectedItem.img == null) {
+                    $('#output').attr('src', image);
+                } else {
+                    $('#output').attr('src', '../' + selectedItem.img);
+                }
+            }
+        });
+
+        $('#btnSubmit').click(function () {
+            var activityId = $('#activityId').val();
+            var title = $('#txtTitle').val();
+            var sortOrder = $('#txtSortOrder').val();
+
+            var formData = new FormData();
+            var file = $('#fileToBeUploaded')[0];
+            formData.append('activityId', activityId);
+            formData.append('title',title);
+            formData.append('sortOrder', sortOrder);
+            formData.append('image', file.files[0]);
+
+            if ($('#txtType').val() == "Edit") {
+                if (activityId != '' && title != '' && sortOrder != '' && formData != '') {
+                    $.ajax({
+                        url: '/api/products/activity/edit',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            notification('success', "Activity Update Successfully!", "Successful");
+                            $('#EditActivity').modal('hide');
+                            table.ajax.reload();
+                        },
+                        error: function (data) {
+                            var response = data.responseJSON;
+                            if (response.error != null) {
+                                notification('error', response.error, 'Error');
+                            } else {
+                                notification('warning', response.warning, 'Warning');
+                            }
+                        },
+                        complete: function (data) {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+                else {
+                    $('#usersform').addClass('was-validated');
+                }
+            }
+        });
+
+        $('#btnCancel').click(function () {
+            $('#EditActivity').modal('hide');
+            table.ajax.reload();
+        });
+
+        $('#btnDelete').click(function () {
+            $('#DeleteModalLabel').text("Delete Confirmation");
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            if (selectedItem != null) {
+                $('#lblTitle').text(selectedItem.title);
+                $('#DeleteActivity').modal('show');
+            }
+            else {
+                $('#DeleteActivity').modal('hide');
+            }
+
+        });
+
+        $('#btnDeleteCancel').click(function () {
+            $('#DeleteActivity').modal('hide');
+            table.ajax.reload();
+        });
+
+        $('#btnDeleteConfirm').click(function () {
+            $('#DeleteActivity').modal('hide');
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            var activityId = selectedItem.activityId;
+            $.ajax({
+                url: "/api/products/activity/delete?activityId=" + activityId,
+                type:'POST',
+                dataType:'json',
+                success: function (data) {
+                    notification('success', "Activity deleted Successfully", "Successfully!");
+                    table.ajax.reload;
+                },
+                error: function (data) {
+                    notification('warning', "Can't delete , This Activity is not deleted", "Warning!");
+                    table.ajax.reload();
+                },
+                complete: function (data) {
+                    table.ajax.reload();
+                }
+            });
+        });
+    });
+</script>
