@@ -582,5 +582,82 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             }
         }
         #endregion
+
+        #region WeldingTraining
+        [HttpGet("weldingtraining")]
+        public async Task<IActionResult> GetWelding()
+        {
+            var weldingList = await _context.WeldingTrainings.OrderBy(w => w.SortOrder).ToListAsync();
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new {total_count = weldingList.Count},
+                Data = weldingList
+            });
+        }
+
+        [HttpPost("weldingtraining/edit")]
+        public async Task<IActionResult> EditWeldingTraining([FromForm] EditWeldingTrainingModel model)
+        {
+            Entities.WeldingTraining welding = await _context.WeldingTrainings.FirstOrDefaultAsync(a => a.WeldingId == model.WeldingId);
+            if (welding != null)
+            {
+                welding.Title = model.Title;
+                welding.SortOrder = model.SortOrder;
+            }
+
+            ImageFile = model.Image;
+
+            if (ImageFile != null)
+            {
+                using var stream = new MemoryStream();
+                ImageFile.CopyTo(stream);
+                var bytes = stream.ToArray();
+                string image = Convert.ToBase64String(bytes);
+                Image image1 = Image.FromStream(stream);
+                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
+                welding.Img = $"images/welding/{welding.WeldingId}{extension}";
+                _imageService.WriteImage(image1, welding.WeldingId.ToString(), $"{welding.WeldingId}.jpg", "welding");
+            }
+
+            _context.Attach(welding).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseModel()
+            {
+                Data = welding,
+                Success = true,
+                Code = StatusCodes.Status200OK
+            });
+        }
+
+        [HttpPost("weldingtraining/delete")]
+        public async Task<IActionResult> DeleteWeldingTraining(int weldingId)
+        {
+            var welding = await _context.WeldingTrainings.FindAsync(weldingId);
+
+            if (welding != null)
+            {
+                _context.WeldingTrainings.Remove(welding);
+                await _context.SaveChangesAsync();
+                return Ok(new ResponseModel()
+                {
+                    Message = "Successfully Deleted!",
+                    Success = true,
+                    Code = StatusCodes.Status200OK
+                });
+            }
+            else
+            {
+                return BadRequest(new ResponseModel()
+                {
+                    Success = false,
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "Unsuccessfully!"
+                });
+            }
+        }
+        #endregion
     }
 }

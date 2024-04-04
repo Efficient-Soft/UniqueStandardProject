@@ -40,17 +40,15 @@
                         <span id="LblSearchCount" class="badge bg-light px-2 py-2 search-count"></span>
                     </div>
                 </div>
-                <table id="tblService" class="table dt-responsive  nowrap w-100">
+                <table id="tblWelding" class="table dt-responsive  nowrap w-100">
                     <thead class="bg-light">
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">#</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
-                            <th scope="col">Image</th>
                             <th scope="col">CreateDate</th>
-                            <th scope="col">UpdateDate</th>
-                            <th scope="col">UpdateUser</th>
                             <th scope="col">Sort Order</th>
                         </tr>
                     </thead>
@@ -63,6 +61,11 @@
 <!-- JAVASCRIPT -->
 <partial name="_vendor_scripts" />
 <partial name="_vendor_datatable_scripts" />
+<partial name="_EditWeldingTraining" />
+<partial name="_DeleteWeldingTraining" />
+
+<!--tinymce js-->
+<script src="~/assets/libs/tinymce/tinymce.min.js"></script>
 
 <!-- Validation JAVASCRIPT -->
 
@@ -74,3 +77,214 @@
 <script src="~/lib/jquery-cropper/jquery-cropper.js" type="text/javascript"></script>
 
 <script src="~/assets/js/app_sub.js"></script>
+<script>
+    //#region preload image
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+    //#endregion
+
+    $(document).ready(function () {
+        var url = "/api/products/weldingtraining";
+
+        var table = $('#tblWelding').DataTable({
+            scrollX:true,
+            responsive:false,
+            ajax:url,
+            dom: '<"top"f>rt<"bottom"ilp><"clear">',
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                ['10', '25', '50', '100', 'All']
+            ],
+            buttons: [{
+                extend: "excelHtml5",
+                className: "btn-success",
+                title: ('@ViewBag.pSubTitle' + ' Report' + ' (@DateTime.Now.ToString("dd-MMM-yyyy"))').trim(' '),
+                exportOptions: {
+                    orthogonal: "myExport", columns: 'th:not(:first-child)'
+                }
+            }],
+            columns:[
+                {
+                    defaultContent: '',
+                    width: "2.5%",
+                    render: function () {
+                        return '<input type="checkbox" class="form-check-input" style="margin-inline:25%">'
+                    },
+                    ordering: false,
+                    orderable: false,
+                },
+                {data:"weldingId"},
+                {
+                    data: "img",
+                    render: function (data) {
+                        if (data == null) {
+                            return '<image src="/images/thumbnail.jpg" class="image-fluid type-image" />'
+                        }
+                        else {
+                            return '<image src="/' + data + '" class="image-fluid type-image" />'
+                        }
+                    }
+                },
+                {data:"title"},
+                {data:"description"},
+                {data:"createDate" },
+                {data:"sortOrder"}
+            ],
+            order: [[1, "asc"]],
+            "select": {
+                "style": 'os'
+            },
+            retrieve: true
+        });
+
+        //search
+        $('#TxtSearch').keyup(function () {
+            table.search($(this).val()).draw();
+            if ($('#TxtSearch').val() == '') {
+                $('#LblSearchCount').hide();
+            }
+            else {
+                $('#LblSearchCount').show();
+            }
+            searchCount = table.rows({ search: 'applied' }).count();
+            $('#LblSearchCount').html('Result count: <b>' + searchCount + '</b>');
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows().nodes()).prop('checked', false);
+            if (type === 'row') { $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', true); }
+        });
+
+        table.on('deselect', function (e, dt, type, indexes) {
+            $('input[type="checkbox"]', table.rows(indexes).nodes()).prop('checked', false);
+        });
+
+        $('#btnCreate').click(function () {
+            window.location.href = `weldingtraining/create`;
+        });
+
+        $('#btnEdit').click(function () {
+            $('#OptionModelLabel').text('Update Welding Training');
+            $('#txtType').val('Edit');
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            console.log(selectedItem);
+            var image = '/images/thumbnail.jpg';
+            if (selectedItem != null) {
+                $('#weldingId').val(selectedItem.weldingId);
+                $('#txtTitle').val(selectedItem.title);
+                $('#txtSortOrder').val(selectedItem.sortOrder);
+                var content = selectedItem.description;
+                tinyMCE.activeEditor.setContent(content);
+                $('#EditWeldingTraining').modal('show');
+
+                if (selectedItem.img == null) {
+                    $('#output').attr('src', image);
+                } else {
+                    $('#output').attr('src', '../' + selectedItem.img);
+                }
+            }
+        });
+
+        $('#btnSubmit').click(function () {
+            var activityId = $('#weldingId').val();
+            var title = $('#txtTitle').val();
+            var sortOrder = $('#txtSortOrder').val();
+
+            var formData = new FormData();
+            var file = $('#fileToBeUploaded')[0];
+            formData.append('weldingId', activityId);
+            formData.append('title', title);
+            formData.append('sortOrder', sortOrder);
+            formData.append('image', file.files[0]);
+
+            if ($('#txtType').val() == "Edit") {
+                if (activityId != '' && title != '' && sortOrder != '' && formData != '') {
+                    $.ajax({
+                        url: '/api/products/weldingtraining/edit',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            notification('success', "Welding Training Update Successfully!", "Successful");
+                            $('#EditWeldingTraining').modal('hide');
+                            table.ajax.reload();
+                        },
+                        error: function (data) {
+                            var response = data.responseJSON;
+                            if (response.error != null) {
+                                notification('error', response.error, 'Error');
+                            } else {
+                                notification('warning', response.warning, 'Warning');
+                            }
+                        },
+                        complete: function (data) {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+                else {
+                    $('#usersform').addClass('was-validated');
+                }
+            }
+        });
+
+        $('#btnDelete').click(function () {
+            $('#DeleteModalLabel').text("Delete Confirmation");
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            if (selectedItem != null) {
+                $('#lblTitle').text(selectedItem.title);
+                $('#DeleteWeldingTraining').modal('show');
+            }
+            else {
+                $('#DeleteWeldingTraining').modal('hide');
+            }
+
+        });
+
+        $('#btnDeleteCancel').click(function () {
+            $('#DeleteWeldingTraining').modal('hide');
+            table.ajax.reload();
+        });
+
+        $('#btnCancel').click(function () {
+            $('#EditWeldingTraining').modal('hide');
+            table.ajax.reload();
+        });
+
+        $('#btnDeleteConfirm').click(function () {
+            $('#DeleteWeldingTraining').modal('hide');
+            var selectedItem = table.rows({ selected: true }).data()[0];
+            var weldingId = selectedItem.weldingId;
+            $.ajax({
+                url: "/api/products/weldingtraining/delete?weldingId=" + weldingId,
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    notification('success', "Welding Training deleted Successfully", "Successfully!");
+                    table.ajax.reload;
+                },
+                error: function (data) {
+                    notification('warning', "Can't delete , This Welding Training is not deleted", "Warning!");
+                    table.ajax.reload();
+                },
+                complete: function (data) {
+                    table.ajax.reload();
+                }
+            });
+        });
+    });
+
+    tinymce.init({
+        selector: "#taskdesc-editor", height: 300,
+        plugins: ["advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker", "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking", "save table contextmenu directionality emoticons template paste textcolor"],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+        style_formats: [{ title: "Bold text", inline: "b" }, { title: "Red text", inline: "span", styles: { color: "#ff0000" } }, { title: "Red header", block: "h1", styles: { color: "#ff0000" } }, { title: "Example 1", inline: "span", classes: "example1" }, { title: "Example 2", inline: "span", classes: "example2" }, { title: "Table styles" }, { title: "Table row 1", selector: "tr", classes: "tablerow1" }]
+    });
+</script>

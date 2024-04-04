@@ -1,25 +1,21 @@
-﻿<div class="modal fade" id="EditProductDetail" tabindex="-1" role="dialog" aria-labelledby="myModalSelectOption" aria-hidden="true">
+﻿<div class="modal fade" id="EditWeldingTraining" tabindex="-1" role="dialog" aria-labelledby="myModalSelectOption" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content border-0">
-            <input type="text" id="detailId" hidden />
-            <input type="text" id="productId" hidden />
+            <input type="text" id="weldingId" hidden />
             <input type="text" hidden id="txtType" />
             <div class="modal-header">
-                <h5 class="modal-title text-danger" id="DeleteModalLabel">Edit Product Detail</h5>
+                <h5 class="modal-title text-danger" id="OptionModalLabel">Edit Welding Training</h5>
             </div>
             <div class="modal-body">
                 <form id="usersform" method="dialog" class="needs-validation" novalidate>
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="mb-3">
-                                        <label for="ddlProduct" class="form-label">Product</label><br />
-                                        <div>
-                                            <select id="ddlProductDetail" name="product" class="form-control p-3" style="width: 100%; height: 35px" required>
-                                                <option value="" selected disabled>---Select Product---</option>
-                                            </select>
-                                        </div>
+                                <div class="mb-3">
+                                    <label for="formrow-fullname-input" class="form-label">Title</label><br />
+                                    <input type="text" class="form-control" id="txtTitle" name="Title" placeholder="Enter title..." required>
+                                    <div class="invalid-feedback">
+                                        Please type valid title.
                                     </div>
                                 </div>
                             </div>
@@ -29,15 +25,6 @@
                                     <input type="text" class="form-control" id="txtSortOrder" name="SortOrder" placeholder="Enter sort order..." required>
                                     <div class="invalid-feedback">
                                         Please type valid sort order.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label for="formrow-fullname-input" class="form-label">Title</label><br />
-                                    <input type="text" class="form-control" id="txtTitle" name="Title" placeholder="Enter title..." required>
-                                    <div class="invalid-feedback">
-                                        Please type valid title.
                                     </div>
                                 </div>
                             </div>
@@ -75,4 +62,5 @@
         </div>
     </div>
 </div>
+
 

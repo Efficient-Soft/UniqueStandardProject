@@ -1,0 +1,62 @@
+﻿@page
+@model UniqueStandardProject.Pages.WeldingTrainingModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    img {
+        border-radius: 10px;
+    }
+</style>
+
+<!-- Activity Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="text-primary text-uppercase">// Our WeldingTraining //</h6>
+            <h1 class="mb-5">Explore Our WeldingTraining</h1>
+        </div>
+        <div class="row" id="welding">
+        </div>
+    </div>
+</div>
+<!-- Activity End -->
+
+<script>
+    var url = 'api/products/weldingtraining';
+
+    var item = document.getElementById('welding');
+
+    fetch(url)
+        .then((res) => res.json())
+        .then((response) => {
+            console.log(response);
+            if (response.success) {
+                if (Array.isArray(response.data)) {
+                    generateHtml(response.data);
+                } else {
+                    console.error('The data received is not an array.');
+                }
+            } else {
+                console.error('Request was not successful.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
+    const generateHtml = (data) => {
+        data.sort((a, b) => a.sortOrder - b.sortOrder);
+        var html = ``;
+        data.forEach((player) => {
+            html +=
+                `<div class="col-md-3">
+                            <img src="${player.img}" class="shadow p-3 mb-3 bg-white img-rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                            <p class="name" style="color:primary; font-size: 15px;width: 100%;"><center>${player.title}</center></p>
+                        </div>`;
+        });
+        document.getElementById('welding').innerHTML = html;
+    };
+
+</script>
