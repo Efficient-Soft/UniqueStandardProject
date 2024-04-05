@@ -130,8 +130,18 @@
                 },
                 {data:"title"},
                 {data:"sortOrder"},
-                {data:"createDate"},
-                {data:"updateDate"},
+                {
+                    data: "createDate",
+                    render: function (data) {
+                        return getDateFormat(data);
+                    }
+                },
+                {
+                    data: "updateDate",
+                    render: function (data) {
+                        return getDateFormat(data);
+                    }
+                },
                 {data:"updateUser"},
             ],
             order: [[1, "asc"]],
@@ -277,4 +287,10 @@
             });
         });
     });
+
+    //DateFormat
+    function getDateFormat(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
 </script>

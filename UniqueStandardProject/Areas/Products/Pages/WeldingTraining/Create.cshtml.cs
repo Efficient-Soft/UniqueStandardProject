@@ -69,10 +69,8 @@ namespace UniqueStandardProject.Areas.Products.Pages.WeldingTraining
                     }
 
                 }
-                else
-                {
-                    return RedirectToPage("./Index");
-                }
+
+                return RedirectToPage("./Index");
             }
 
             return Page();

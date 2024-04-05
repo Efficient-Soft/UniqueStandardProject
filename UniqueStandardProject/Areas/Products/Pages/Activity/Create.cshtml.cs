@@ -44,8 +44,6 @@ namespace UniqueStandardProject.Areas.Products.Pages.Activity
                 Title = Activity.Title,
                 Img = Activity.Img,
                 CreateDate = DateTime.Now,
-                UpdateDate = DateTime.Now,
-                UpdateUser = User.Identity.Name,
                 SortOrder = Activity.SortOrder
             };
 

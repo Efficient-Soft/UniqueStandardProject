@@ -527,6 +527,8 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 activity.Title = model.Title;
                 activity.SortOrder = model.SortOrder;
+                activity.UpdateDate = DateTime.Now;
+                activity.UpdateUser = User.Identity.Name;
             }
 
             ImageFile = model.Image;
@@ -605,6 +607,8 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 welding.Title = model.Title;
                 welding.SortOrder = model.SortOrder;
+                welding.UpdateDate = DateTime.Now;
+                welding.UpdateUser = User.Identity.Name;
             }
 
             ImageFile = model.Image;
