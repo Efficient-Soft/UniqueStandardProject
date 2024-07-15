@@ -34,7 +34,7 @@
                         <button id="btnDelete" type="button" class="btn btn-light"><i class="fa fa-trash"></i>&nbsp;Delete</button>
                     </div>
                     <div class="col-md-4">
-                        <select id="ddlProduct" class="form-control select2"></select>
+                        <select id="ddlProduct" class="form-control form-select select-2"></select>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group">
@@ -72,6 +72,8 @@
 
 <!--tinymce js-->
 <script src="~/assets/libs/tinymce/tinymce.min.js"></script>
+
+<script src="~/assets/libs/select2/js/select2.min.js"></script>
 
 <!-- Validation JAVASCRIPT -->
 
@@ -282,7 +284,7 @@
 
         //#region ddlProductDetail
         $('#ddlProductDetail').select2({
-            dropdownParent: $('#itemForm')
+            dropdownParent: $('')
         });
         $.getJSON({
             url: "/api/products",
