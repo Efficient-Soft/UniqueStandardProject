@@ -17,10 +17,14 @@
             <h6 class="text-primary text-uppercase">// Our Services //</h6>
             <h1 class="mb-5">Explore Our Services</h1>
         </div>
-        <div class="row" id="service">
+        <div class="row" id="service"></div>
+        <div class="d-flex justify-content-center mt-4">
+            <button id="prevPage" class="btn btn-primary me-2">Previous</button>
+            <button id="nextPage" class="btn btn-primary">Next</button>
         </div>
     </div>
 </div>
+
 <!-- Service End -->
 
 <script>
@@ -28,13 +32,19 @@
 
     var item = document.getElementById('service');
 
+    let allData = [];
+    let currentPage = 1;
+    const itemsPerPage = 9;
+
     fetch(url)
         .then((res) => res.json())
         .then((response) => {
             console.log(response);
             if (response.success) {
                 if (Array.isArray(response.data)) {
-                    generateHtml(response.data);
+                    allData = response.data;
+                    allData.sort((a, b) => a.sortOrder - b.sortOrder);
+                    renderPage(currentPage);
                 } else {
                     console.error('The data received is not an array.');
                 }
@@ -46,17 +56,50 @@
             console.error('Error fetching data:', error);
         });
 
+    const renderPage = (page) => {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = allData.slice(startIndex, endIndex);
+        generateHtml(pageData);
+        updatePaginationButtons();
+    };
+
+
     const generateHtml = (data) => {
         data.sort((a, b) => a.sortOrder - b.sortOrder);
         var html = ``;
         data.forEach((player) => {
             html +=
-                `<div class="col-md-4">
-                    <img src="${player.img}" class="shadow p-3 mb-3 bg-white rounded" style="width: 100%; height: 250px; object-fit: cover;">
-                    <p class="name" style="color:primary; font-size: 15px;width: 100%;"><center>${player.title}</center></p>
-                </div>`;
+                `<div class="col-md-4 mb-5">
+                        <div class="text-dark bg-light" >
+                            <div style="height:50px;" class="pt-3"><center>${player.title}</center></div >
+                                <img src=${player.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:200px;">
+                            </div>
+                        </div>
+                    </div>`;
         });
         document.getElementById('service').innerHTML = html;
     };
 
+    const updatePaginationButtons = () => {
+        const totalPages = Math.ceil(allData.length / itemsPerPage);
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+    };
+
+    // Event Listeners for Pagination Buttons
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+        const totalPages = Math.ceil(allData.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage(currentPage);
+        }
+    });
 </script>
