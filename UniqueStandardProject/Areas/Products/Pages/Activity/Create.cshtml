@@ -160,7 +160,7 @@
 
             var $image = $('#output_photo');
             var options = {
-                aspectRatio: 4 / 5,
+                aspectRatio: 2,
                 preview: '.img-preview',
                 crop: function (e) {
                 }
@@ -228,6 +228,7 @@
             $('#btnCropPhoto').click(function () {
                 result = $image.cropper("getCroppedCanvas", { maxWidth: 4096, maxHeight: 4096 }, undefined);
                 $('#preview_output_photo').attr('src', result.toDataURL(uploadedImageType));
+                
                 $('#crop-container-photo').hide();
                 $('#crop-preview-photo').show();
 
