@@ -82,10 +82,9 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                         }
                     }
                 }
-                else
-                {
-                    return RedirectToPage("./Index");
-                }
+                
+                return RedirectToPage("./Index");
+                
                 
             }
             return Page();
