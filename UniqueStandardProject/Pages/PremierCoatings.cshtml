@@ -19,6 +19,10 @@
         </div>
         <div class="row wow fadeInUp" id="premier">
         </div>
+        <div class="d-flex justify-content-center mt-4">
+            <button id="prevPage" class="btn btn-primary me-2">Previous</button>
+            <button id="nextPage" class="btn btn-primary">Next</button>
+        </div>
     </div>
 </div>
 <!-- Service End -->
@@ -26,13 +30,19 @@
 <script>
     var url = 'api/products/productDetail?productId=1';
 
+    let allData = [];
+    let currentPage = 1;
+    const itemsPerPage = 9;
+
     fetch(url)
         .then((res) => res.json())
         .then((response) => {
             console.log(response);
             if (response.success) {
                 if (Array.isArray(response.data)) {
-                    generateHtml(response.data);
+                    allData = response.data;
+                    allData.sort((a, b) => a.sortOrder - b.sortOrder);
+                    renderPage(currentPage);
                 } else {
                     console.error('The data received is not an array.');
                 }
@@ -43,6 +53,14 @@
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
+
+    const renderPage = (page) => {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = allData.slice(startIndex, endIndex);
+        generateHtml(pageData);
+        updatePaginationButtons();
+    };
 
     const generateHtml = (data) => {
         var item = document.getElementById('premier');
@@ -68,5 +86,27 @@
             console.error("Element not found or not loaded yet.");
         }
     };
+
+    const updatePaginationButtons = () => {
+        const totalPages = Math.ceil(allData.length / itemsPerPage);
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+    };
+
+    // Event Listeners for Pagination Buttons
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+        const totalPages = Math.ceil(allData.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage(currentPage);
+        }
+    });
 
 </script>
