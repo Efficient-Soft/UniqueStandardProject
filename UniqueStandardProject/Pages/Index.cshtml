@@ -97,6 +97,31 @@
     body {
         overflow-x: hidden;
     }
+
+    .map-container {
+        position: relative;
+        width: 100%;
+        height: 450px;
+    }
+
+        .map-container iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+        }
+
+    .map-label {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
 </style>
 
 <!-- Carousel Start -->
@@ -321,9 +346,11 @@
 </div>
 <!-- Testimonial End -->
 
-<div class="container mb-4">
-    <iframe src="https://maps.google.com/maps?q=16.80669,96.20880&hl=es;z=14&amp;output=embed" width="100%" height="450" frameborder="0" style="border: 0" allowfullscreen></iframe>
+<div class="map-container mb-4">
+    <div class="map-label">Unique Standard Co.,Ltd</div>
+    <iframe src="https://maps.google.com/maps?q=16.80669,96.20880&hl=es;z=14&amp;output=embed" frameborder="0" style="border: 0;width:100%;height:450px;" allowfullscreen></iframe>
 </div>
+
 
 
 <!-- JAVASCRIPT -->
