@@ -368,6 +368,37 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [HttpGet("serviceTitle")]
+        public async Task<IActionResult> GetServiceTitle()
+        {
+            var serviceTitles = await _context.ServiceTbls.ToListAsync();
+
+            var titles = serviceTitles
+                        .GroupBy(s => s.Title).ToList();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = titles.Count },
+                Data = titles
+            });
+        }
+
+        [HttpGet("getImage")]
+        public async Task<IActionResult> GetImage(string title)
+        {
+            var imageList = await _context.ServiceTbls.Where(s => s.Title == title).ToListAsync();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new {total_count =  imageList.Count},
+                Data = imageList
+            });
+        }
+
         [HttpPost("service/delete")]
         public async Task<IActionResult> DeleteService(int serviceId)
         {
