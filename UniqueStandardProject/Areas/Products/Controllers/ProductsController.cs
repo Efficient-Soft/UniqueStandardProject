@@ -135,9 +135,9 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                 Image image1 = Image.FromStream(stream);
                 string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
                 productDetail.Img = $"images/productDetail/{productDetail.DetailId}-{productDetail.ProductId}{extension}";
-                _imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg","productDetail");
+                _imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg", "productDetail");
             }
-            
+
             _context.Entry(productDetail).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
@@ -149,7 +149,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
-       
+
 
         [HttpGet("productDetail/Except")]
         public async Task<IActionResult> GetExceptProductDetail(int productId, int detailId)
@@ -371,17 +371,18 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         [HttpGet("serviceTitle")]
         public async Task<IActionResult> GetServiceTitle()
         {
-            var serviceTitles = await _context.ServiceTbls.ToListAsync();
-
-            var titles = serviceTitles
-                        .GroupBy(s => s.Title).ToList();
+            var serviceTitles = await _context
+                                        .ServiceTbls
+                                        .Select(s => new {s.ServiceId, s.Title})
+                                        .Distinct()
+                                        .ToListAsync();
 
             return Ok(new ResponseModel()
             {
                 Success = true,
                 Code = StatusCodes.Status200OK,
-                Meta = new { total_count = titles.Count },
-                Data = titles
+                Meta = new { total_count = serviceTitles.Count },
+                Data = serviceTitles
             });
         }
 
@@ -394,7 +395,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 Success = true,
                 Code = StatusCodes.Status200OK,
-                Meta = new {total_count =  imageList.Count},
+                Meta = new { total_count = imageList.Count },
                 Data = imageList
             });
         }
@@ -545,7 +546,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 Success = true,
                 Code = StatusCodes.Status200OK,
-                Meta = new {total_count = activityList.Count},
+                Meta = new { total_count = activityList.Count },
                 Data = activityList
             });
         }
@@ -554,7 +555,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> EditActivity([FromForm] EditActivityModel model)
         {
             Entities.Activity activity = await _context.Activities.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityId);
-            if(activity != null)
+            if (activity != null)
             {
                 activity.Title = model.Title;
                 activity.SortOrder = model.SortOrder;
@@ -564,7 +565,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
 
             ImageFile = model.Image;
 
-            if(ImageFile != null)
+            if (ImageFile != null)
             {
                 using var stream = new MemoryStream();
                 ImageFile.CopyTo(stream);
@@ -593,7 +594,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         {
             var activity = await _context.Activities.FindAsync(activityId);
 
-            if(activity != null)
+            if (activity != null)
             {
                 _context.Activities.Remove(activity);
                 await _context.SaveChangesAsync();
@@ -625,8 +626,26 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 Success = true,
                 Code = StatusCodes.Status200OK,
-                Meta = new {total_count = weldingList.Count},
+                Meta = new { total_count = weldingList.Count },
                 Data = weldingList
+            });
+        }
+
+        [HttpGet("weldingTitle")]
+        public async Task<IActionResult> GetWeldingTitle()
+        {
+            var distinctTitles = await _context
+                                        .WeldingTrainings
+                                        .Select(s => new { s.WeldingId, s.Title })
+                                        .Distinct()
+                                        .ToListAsync();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = distinctTitles.Count },
+                Data = distinctTitles
             });
         }
 
@@ -692,6 +711,20 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                     Message = "Unsuccessfully!"
                 });
             }
+        }
+
+        [HttpGet("trainingImage")]
+        public async Task<IActionResult> GetTrainingImage(string title)
+        {
+            var imageList = await _context.WeldingTrainings.Where(s => s.Title == title).ToListAsync();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = imageList.Count },
+                Data = imageList
+            });
         }
         #endregion
     }
