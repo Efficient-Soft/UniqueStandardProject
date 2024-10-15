@@ -212,6 +212,20 @@
     </div>
 </div>
 
+<div class="container mt-3">
+    <div class="row">
+        <h1 class="text-center">Our Team</h1>
+        <p class="name" style="color:primary; font-size: 20px;width: 100%;">Our strength lies in our people. Our team comprises industry experts, innovative thinkers and dedicated professionals who work collaboratively to achieve our goals. With a passion for excellence and a commitment to continuous improvement, our team is the driving force behind our success.</p>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <div class="row">
+        <h1 class="text-center">Our Commitment</h1>
+        <p class="name" style="color:primary; font-size: 20px;width: 100%;">At Unique Standard Co., Ltd., we are committed to delivering unparalleled value and making a positive impact. We embrace challenges as opportunities for growths and are dedicated to fostering a culture of excellence and innovation.</p>
+    </div>
+</div>
+
 <!-- Service Start -->
 <div class="container-xxl service py-5">
     <div class="container">
@@ -533,26 +547,6 @@
             });
 
 
-        // fetch(url1).then((res) => res.json())
-        //     .then((response) => {
-        //         console.log(response);
-        //         if (response.success) {
-        //             if (Array.isArray(response.data)) {
-        //                 displayImage(response.data);
-        //                 setupPagination(response.data);
-        //                 /*displayPageInfo();*/
-        //             } else {
-        //                 console.error('The data received is not an array.');
-        //             }
-        //         } else {
-        //             console.error('Request was not successful.');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error fetching data:', error);
-        //     });
-
-
         const itemsPerPage = 9;
         let currentPage = 1;
 
@@ -578,35 +572,6 @@
                 product.innerHTML = html;
             }
         }
-
-        // function displayImage(images) {
-        //     const product = document.getElementById("project");
-        //     var html = ``;
-
-        //     if (images && Array.isArray(images) && images.length > 0) {
-        //         const start = (currentPage - 1) * itemsPerPage;
-        //         const end = currentPage * itemsPerPage;
-
-        //         for (let i = start; i < end && i < images.length; i++) {
-        //             images.sort((a, b) => a.sortOrder - b.sortOrder);
-        //             let sort = images[i].sortOrder;
-
-        //             var detailUrl = `/Detail?detailId=${encodeURIComponent(images[i].detailId)}&title=${encodeURIComponent(images[i].title)}&description=${encodeURIComponent(images[i].description)}`;
-        //             console.log(detailUrl);
-        //             html +=
-        //                 `<div class="portfolio-item wow fadeInUp col-md-4">
-        //                                 <a href="${detailUrl}" class="portfolio-popup">
-        //                              <img src="${images[i].img}" class="shadow p-3 bg-white img-rounded" style="width: 100%; height: 250px; object-fit: cover;">
-        //                              <div class="portfolio-overlay">
-        //                             </div>
-        //                             </a>
-        //                             <p class="name" style="text-color:primary; font-size: 15px;width: 100%;"><center>${images[i].title}</center></p>
-        //                       </div>`;
-        //         }
-
-        //         product.innerHTML = html;
-        //     }
-        // }
 
         function setupPagination(images) {
             const container = document.getElementById('project');
@@ -640,7 +605,6 @@
 
         displayImage(currentPage);
         setupPagination(currentPage);
-
 
         fetch(url)
             .then((res) => res.json())
