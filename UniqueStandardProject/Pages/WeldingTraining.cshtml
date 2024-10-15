@@ -14,7 +14,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h1 class="mb-5">Our Training</h1>
+            <div class="row" id="training">
+            </div>
         </div>
         <div class="row" id="welding">
         </div>
@@ -22,15 +23,13 @@
             <button id="prevPage" class="btn btn-primary me-2">Previous</button>
             <button id="nextPage" class="btn btn-primary">Next</button>
         </div>
-        <div class="row" id="training">
-        </div>
     </div>
 </div>
 <!-- Activity End -->
 
 <script>
     var title = (new URL(location.href)).searchParams.get('weldingTitle');
-    var url = 'api/products/trainingImage?title=' +title;
+    var url = 'api/products/trainingImage?title=' + title;
 
     let allData = [];
     let currentPage = 1;
@@ -94,25 +93,140 @@
         data.forEach((player) => {
             html +=
                 `<div class="col-md-4 mb-5">
-                    <div class="text-dark bg-light">
-                       <img src=${player.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:250px;">
-                       <div style="height:50px;"><center>${player.title}</center></div>
-                    </div>
-                </div>`;
+                                <div class="text-dark bg-light">
+                                   <img src=${player.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:250px;">
+                                   <div style="height:50px;"><center>${player.title}</center></div>
+                                </div>
+                            </div>`;
         });
         document.getElementById('welding').innerHTML = html;
     };
 
-    function displayWelding(){
-        var html = ``;
-        html +=`<div>
-                <p>Ready to navigate your career to new horizons? Join our Lathe Machine Maritime Training Program and master the skills that will set you apart in the maritime industry!</p>
-                </div>
-                `;
-
-       document.getElementById('training').innerHTML = html;
+    if (title === 'Welding Training') {
+        displayWelding();
+    }
+    else {
+        displayLathe();
     }
 
-    displayWelding();
+    function displayWelding() {
+        var html = ``;
+        html += `
+                        <h3>Set Sail for Success with Our Lathe Machine Maritime Training!</h3>
+                            <p>Ready to navigate your career to new horizons? Join our Lathe Machine Maritime Training Program and master the skills that will set you apart in the maritime industry!</p>
+                            <div class="container mt-5">
+                                <div class="text-center mb-4">
+                                    <h2>Why Choose Our Training?</h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Expert Instruction</h5>
+                                                <p class="card-text">Learn from seasoned professionals with real-world maritime experience.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Hands-On Training</h5>
+                                                <p class="card-text">Gain practical skills using state-of-the-art lathes and equipment.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Industry-Relevant Curriculum</h5>
+                                                <p class="card-text">Our program is tailored to meet the demands of today’s maritime sector, ensuring you’re job-ready.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Certification</h5>
+                                                <p class="card-text">Receive a recognized certification that boosts your credentials and enhances your employability.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Networking Opportunities</h5>
+                                                <p class="card-text">Connect with industry experts and peers to build valuable relationships for your career.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="row">
+                            <div class="col-md-6">
+                                <div class="container mt-5">
+                                   <h2>What You’ll Learn:</h2>
+                                    <ul class="left-justify" style="text-align:left;">
+                                    <li>Expert Instruction:
+                                    Learn from seasoned professionals with real-world maritime experience.</li>
+                                    <li>Hands-On Training:
+                                    Gain practical skills using state-of-the-art lathes and equipment.</li>
+                                    <li>Industry-Relevant Curriculum:
+                                    Our program is tailored to meet the demands of today’s maritime sector, ensuring you’re job-ready.</li>
+                                    <li>Certification:
+                                    Receive a recognized certification that boosts your credentials and enhances your employability.</li>
+                                    <li>Networking Opportunities:
+                                    Connect with industry experts and peers to build valuable relationships for your career.</li>
+                                    </ul>
+                               </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="container mt-5">
+                                    <h2>Course Details:</h2>
+                                        <ul class="left-justify" style="text-align:left;">
+                                        <li>Duration: Flexible options to fit your schedule</li>
+                                        <li>Location: Conveniently located training centers or online modules</li>
+                                        <li>Start Date: Multiple dates available to suit your need</li>
+                                    </ul>
+                                </div>
+                            </div>
+                           </div>
+                           <div class="row">
+                               <p>Ready to Make Waves? Don’t miss out on this opportunity to advance your career in the maritime industry! Enroll now and set the course for your success.</p>
+                               <p>Sign Up Today and navigate your way to a brighter future! For more information, visit www.uniqstd.com or call us at +959 773 844 187.<p>
+                               <p>Embark on Your Maritime Journey with Confidence!</p>
+                           </div>
+                            `;
+
+        document.getElementById('training').innerHTML = html;
+    }
+
+    function displayLathe() {
+        var html = ``;
+        html += `<div class="container mt-3">
+                            <div class="row">
+                                <h3>US Maritime Welding Training Centre</h3>
+                                        <h3>American Welding Society (AWS) </h3>
+                                        <h3>Shielded Metal Arc Welding Course (SMAW)</h3>
+                                        <p>This course aims to provide seafarers with practical knowledge and skills in Shielded Metal Arc Welding (SMAW) with an understanding of the procedure and proper safety welding practices and all aspects and technical principles, preparation, and methods as applied in SMAW Operations preferably in the Maritime Industry.</p>
+                            <div class="col-md-6">
+                                    <h3>After the training, the trainees should:</h3>
+                                     <ul class="left-justify" style="text-align:left;">
+                                       <li>Familiarization of marine engine / machinery and awareness of onboard safety</li>
+                                       <li>Types of Welding and Machine knowledge</li>
+                                       <li>Hands tools and Mechanical tools</li>
+                                       <li>The keys of Welding</li>
+                                       <li>Bolt weld / Fit up / Fillet weld</li>
+                                       <li>T Joint and Vertical weld (Joint knowledge)</li>
+                                       <li>Pipe fitting and Cutting</li>
+                                       <li>Oxy:/ Acet: Cutting</li>
+                                       <li>Copper Brazing</li>
+                                       <li>Safety of Welding Job</li>
+                                     </ul>
+                            </div>
+                            </div>
+                         </div>
+                        `;
+        document.getElementById('training').innerHTML = html;
+    }
 
 </script>
