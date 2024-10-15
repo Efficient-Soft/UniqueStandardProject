@@ -5,8 +5,9 @@ namespace UniqueStandardProject.Pages
 {
     public class WeldingTrainingModel : PageModel
     {
-        public void OnGet()
+        public void OnGet(string weldingTitle)
         {
+            ViewData["WeldingTitle"] = weldingTitle;
         }
     }
 }

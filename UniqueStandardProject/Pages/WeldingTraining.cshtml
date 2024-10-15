@@ -14,7 +14,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h1 class="mb-5">Our Welding Training</h1>
+            <h1 class="mb-5">Our Training</h1>
         </div>
         <div class="row" id="welding">
         </div>
@@ -22,12 +22,15 @@
             <button id="prevPage" class="btn btn-primary me-2">Previous</button>
             <button id="nextPage" class="btn btn-primary">Next</button>
         </div>
+        <div class="row" id="training">
+        </div>
     </div>
 </div>
 <!-- Activity End -->
 
 <script>
-    var url = 'api/products/weldingtraining';
+    var title = (new URL(location.href)).searchParams.get('weldingTitle');
+    var url = 'api/products/trainingImage?title=' +title;
 
     let allData = [];
     let currentPage = 1;
@@ -99,5 +102,17 @@
         });
         document.getElementById('welding').innerHTML = html;
     };
+
+    function displayWelding(){
+        var html = ``;
+        html +=`<div>
+                <p>Ready to navigate your career to new horizons? Join our Lathe Machine Maritime Training Program and master the skills that will set you apart in the maritime industry!</p>
+                </div>
+                `;
+
+       document.getElementById('training').innerHTML = html;
+    }
+
+    displayWelding();
 
 </script>
