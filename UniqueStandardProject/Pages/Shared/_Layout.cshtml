@@ -93,7 +93,11 @@
                     <div class="dropdown-menu" id="dropdownMenu">
                     </div>
                 </div>
-                <a asp-page="./WeldingTraining" class="nav-item nav-link text-success">Welding Training</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle text-success" data-toggle="dropdown">Training</a>
+                    <div class="dropdown-menu" id="dropdownWelding">
+                    </div>
+                </div>
                 <a asp-page="./Contact" class="nav-item nav-link text-success">Contact</a>
                 <a asp-page="./Login" class="nav-link text-success">LOGIN</a>
             </div>
@@ -184,7 +188,7 @@
                 const response = await fetch('api/products/serviceTitle'); // Replace with your API URL
                 const res = await response.json();
 
-                // Flatten the array
+                // // Flatten the array
                 const flattenedData = res.data.flat();
 
                 // Filter unique titles
@@ -224,5 +228,54 @@
 
         // Fetch and populate dropdown on page load
         fetchData();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to fetch data from API
+        async function WeldingData() {
+            try {
+                const response = await fetch('api/products/weldingTitle'); // Replace with your API URL
+                const res = await response.json();
+
+                // // Flatten the array
+                const flattenedData = res.data.flat();
+
+                // Filter unique titles
+                const uniqueTitles = Array.from(new Set(flattenedData.map(item => item.title)))
+                    .map(title => {
+                        return flattenedData.find(item => item.title === title);
+                    });
+
+                populateDropdown(uniqueTitles);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Function to populate dropdown with data
+        function populateDropdown(data) {
+            const dropdownMenu = document.getElementById('dropdownWelding');
+            dropdownMenu.innerHTML = ''; // Clear existing options
+            data.forEach(item => {
+                const option = document.createElement('a');
+                option.href = '#';
+                option.className = 'dropdown-item text-success';
+                option.dataset.id = item.weldingId; // Use data-* attribute to store the ID
+                option.textContent = item.title;
+                dropdownMenu.appendChild(option);
+            });
+
+            // Add click event listener
+            dropdownMenu.addEventListener('click', function (event) {
+                if (event.target && event.target.matches('a.dropdown-item')) {
+                    const selectedOption = event.target;
+                    console.log('Selected:', selectedOption.textContent);
+                    window.location.href = './weldingtraining?weldingTitle=' + selectedOption.textContent;
+                }
+            });
+        }
+
+        // Fetch and populate dropdown on page load
+        WeldingData();
     });
 </script>
