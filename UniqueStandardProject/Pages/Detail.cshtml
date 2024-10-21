@@ -51,6 +51,8 @@
 
 <script>
     var url = 'api/products/ImgTitle';
+    var url1 = `api/products/productDetail/relatedProduct?detailId=${@ViewData["Id"]}`;
+
     var title = document.getElementById('title');
 
     fetch(url)
@@ -59,6 +61,23 @@
             if (response.success) {
                 if (Array.isArray(response.data)) {
                     generateHtml(response.data);
+                } else {
+                    console.error('The data received is not an array.');
+                }
+            } else {
+                console.error('Request was not successful.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
+    fetch(url1)
+        .then((res) => res.json())
+        .then((response) => {
+            if (response.success) {
+                if (Array.isArray(response.data)) {
+                    displayRelatedProduct(response.data);
                 } else {
                     console.error('The data received is not an array.');
                 }
@@ -83,7 +102,7 @@
                 if (response.success) {
                     if (Array.isArray(response.data)) {
                         showSlideImage(response.data);
-                        relatedProduct(response.data);
+                        // relatedProduct(response.data);
                     } else {
                         console.error('The data received is not an array.');
                     }
@@ -101,8 +120,8 @@
                     item.classList.add('active');
                 }
                 item.innerHTML = `
-                        <img src="${i.img}" class="d-block w-100" alt="Slide" style="height:300px;">
-                        `;
+                            <img src="${i.img}" class="d-block w-100" alt="Slide" style="height:300px;">
+                            `;
                 carouselInner.appendChild(item);
             });
 
@@ -121,21 +140,38 @@
 
     }
 
-    const relatedProduct = (data) => {
+    // const relatedProduct = (data) => {
+    //     var carouselProduct = document.getElementById('carouselProduct');
+    //     var product = ``;
+    //     data.forEach((item) => {
+    //         product += `<div class="col-md-3">
+    //                                 <div class="text-dark bg-light" >
+    //                                     <div style="height:50px;" class="pt-3"><center>${item.title}</center></div >
+    //                                         <img src=${item.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:200px;">
+    //                                         <a href="#" class="btn-sm btn-primary mb-3">LEARN MORE</a>
+    //                                     </div>
+    //                                 </div>
+    //                                </div>`;
+    //     });
+
+    //     carouselProduct.innerHTML = product;
+    // };
+
+    const displayRelatedProduct = (data) => {
         var carouselProduct = document.getElementById('carouselProduct');
         var product = ``;
         data.forEach((item) => {
             product += `<div class="col-md-3">
-                                <div class="text-dark bg-light" >
-                                    <div style="height:50px;" class="pt-3"><center>${item.title}</center></div >
-                                        <img src=${item.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:200px;">
-                                        <a href="#" class="btn-sm btn-primary mb-3">LEARN MORE</a>
-                                    </div>
-                                </div>
-                               </div>`;
+                           <div class="text-dark bg-light" >
+                              <div style="height:50px;" class="pt-3"><center>${item.title}</center></div >
+                                 <img src=${item.img} class="ps-3 pe-3 pt-3 pb-3 mb-3" alt="Card image cap" style="width:100%;height:200px;">
+                                 <a href="#" class="btn-sm btn-primary mb-3">LEARN MORE</a>
+                               </div>
+                            </div>
+                        </div>`;
         });
 
         carouselProduct.innerHTML = product;
-    };
+    }
 
 </script>

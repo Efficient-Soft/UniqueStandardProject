@@ -50,8 +50,6 @@
                             <th scope="col">Description</th>
                             <th scope="col">Image</th>
                             <th scope="col">CreateDate</th>
-                            <th scope="col">UpdateDate</th>
-                            <th scope="col">UpdateUser</th>
                             <th scope="col">Sort Order</th>
                         </tr>
                     </thead>
@@ -152,13 +150,6 @@
                         return getDateFormat(data);
                     }
                 },
-                {
-                    data: "updateDate",
-                    render: function (data) {
-                        return getDateFormat(data);
-                    }
-                },
-                { data: "updateUser" },
                 { data: "sortOrder" }
 			],
             order: [[1, "asc"]],

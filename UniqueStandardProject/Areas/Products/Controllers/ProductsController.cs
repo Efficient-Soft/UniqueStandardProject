@@ -149,8 +149,6 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
-
-
         [HttpGet("productDetail/Except")]
         public async Task<IActionResult> GetExceptProductDetail(int productId, int detailId)
         {
@@ -162,6 +160,51 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                 Meta = new { total_count = productDetails.Count },
                 Data = productDetails
             });
+        }
+
+        [HttpGet("productDetail/relatedProduct")]
+        public async Task<IActionResult> GetRelatedProductList(int? detailId)
+        {
+            if(detailId is null)
+            {
+                return BadRequest(new ResponseModel()
+                {
+                    Success = false,
+                    Code = StatusCodes.Status400BadRequest,
+                    Message = "DetailId is required."
+                });
+            }
+
+            var productDetail = await _context.ProductDetails
+                                      .FirstOrDefaultAsync(p => p.DetailId == detailId);
+
+            if (productDetail == null || string.IsNullOrEmpty(productDetail.RelatedId))
+            {
+                return NotFound(new ResponseModel()
+                {
+                    Success = false,
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "Product detail not found or relatedId is empty."
+                });
+            }
+
+            var relatedIds = productDetail.RelatedId.Split(',')
+                                                .Select(int.Parse).ToList();
+
+
+
+            var relatedProducts = await _context.ProductDetails
+                                        .Where(p => relatedIds.Contains(p.DetailId))
+                                        .ToListAsync();
+
+            return Ok(new ResponseModel()
+            {
+                Success = true,
+                Code = StatusCodes.Status200OK,
+                Meta = new { total_count = relatedProducts.Count },
+                Data = relatedProducts
+            });
+
         }
 
         #endregion

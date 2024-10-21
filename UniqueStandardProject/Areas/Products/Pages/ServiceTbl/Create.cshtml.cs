@@ -54,7 +54,6 @@ namespace UniqueStandardProject.Areas.Products.Pages.ServiceTbl
                 Desctiption = Input.Desctiption,
                 Img = Input.Img,
                 CreateDate = DateTime.Now,
-                UpdateDate = DateTime.Now,
                 UpdateUser = User.Identity.Name,
                 SortOrder = Input.SortOrder
             };
