@@ -17,6 +17,7 @@ namespace UniqueStandardProject.Entities
         public int DetailId { get; set; }
         [StringLength(500)]
         public string Img { get; set; }
+        public string Title { get; set; }
         public int? SortOrder { get; set; }
     }
 }
