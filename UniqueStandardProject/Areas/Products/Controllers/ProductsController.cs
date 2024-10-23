@@ -296,7 +296,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
                                                  Product = products.Product1,
                                                  DetailId = productdetail.DetailId,
                                                  Img = productImg.Img,
-                                                 Title = productdetail.Title,
+                                                 Title = productImg.Title,
                                              };
 
             List<ProductModel> list = (detailId.HasValue) ? await query.Where(q => q.DetailId == detailId.Value).ToListAsync() : await query.ToListAsync();
