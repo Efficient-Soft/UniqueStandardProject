@@ -99,6 +99,7 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
             Entities.ProductImg productImg = new()
             {
                 DetailId = detailId,
+                Title = Input.Title,
                 Img = Input.Img,
                 SortOrder = Input.SortOrder,
             };
