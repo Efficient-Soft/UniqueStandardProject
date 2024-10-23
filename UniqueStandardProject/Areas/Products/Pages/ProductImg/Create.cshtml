@@ -93,7 +93,14 @@
             <div class="row">
                 <div class="col-xxl-6 col-xl-6">
                     <div class="row">
-                        <div class="col-12 mb-3">
+                        <div class="col-6 mb-3">
+                            <label>Title (EN)</label>
+                            <input asp-for="Input.Title" class="form-control" placeholder="Enter title (EN)..." required />
+                            <div class="invalid-feedback">
+                                Please type product title (EN)
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
                             <label>Sort Order</label>
                             <input asp-for="Input.SortOrder" class="form-control" placeholder="Enter sort order..." />
                             @*<div class="invalid-feedback">
