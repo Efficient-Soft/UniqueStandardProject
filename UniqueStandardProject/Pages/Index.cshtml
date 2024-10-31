@@ -9,20 +9,41 @@
 }
 
 <style>
-    .pagination a {
-        display: inline-block;
-        padding: 25px; /* Adjust padding as needed */
-        text-decoration: none;
+    body {
+        font-family: Arial, sans-serif;
     }
 
-        .pagination a.active {
-            background-color: dodgerblue;
-            color: white;
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        justify-content: center;
+    }
+
+        .pagination li {
+            margin: 0 5px;
         }
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
+        .pagination a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
         }
+
+        .pagination li.active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #f0f0f0;
+            color: #0056b3;
+        }
+
 
     .image:hover {
         border-radius: 50px;
@@ -581,12 +602,19 @@
                     a.addEventListener('click', function () {
                         currentPage = i;
                         displayImage(images);
+                        updateActiveClass();
                     });
 
                     li.appendChild(a);
                     pagination.appendChild(li);
                 }
             }
+        }
+
+        function updateActiveClass() {
+            const paginationItems = document.querySelectorAll('#pagination li');
+            paginationItems.forEach(item => item.classList.remove('active'));
+            paginationItems[currentPage - 1].classList.add('active');
         }
 
         displayImage(currentPage);
