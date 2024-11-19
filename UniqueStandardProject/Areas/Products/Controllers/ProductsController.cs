@@ -317,17 +317,27 @@ namespace UniqueStandardProject.Areas.Products.Controllers
 
             if (imageToDelete != null)
             {
-                // Delete the image file from the server (if applicable)
-                string serverPathToDelete = Path.Combine(_hostingEnvironment.WebRootPath, imageToDelete.Img);
-
-                if (System.IO.File.Exists(serverPathToDelete))
+                if(imageToDelete.Img == null)
                 {
-                    System.IO.File.Delete(serverPathToDelete);
+                    // Delete the image from your data store (e.g., database)
+                    _context.ProductImgs.Remove(imageToDelete);
+                    await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    // Delete the image file from the server (if applicable)
+                    string serverPathToDelete = Path.Combine(_hostingEnvironment.WebRootPath, imageToDelete.Img);
 
-                // Delete the image from your data store (e.g., database)
-                _context.ProductImgs.Remove(imageToDelete);
-                await _context.SaveChangesAsync();
+                    if (System.IO.File.Exists(serverPathToDelete))
+                    {
+                        System.IO.File.Delete(serverPathToDelete);
+                    }
+
+                    // Delete the image from your data store (e.g., database)
+                    _context.ProductImgs.Remove(imageToDelete);
+                    await _context.SaveChangesAsync();
+                }
+                
             }
 
             return Ok(new ResponseModel()
