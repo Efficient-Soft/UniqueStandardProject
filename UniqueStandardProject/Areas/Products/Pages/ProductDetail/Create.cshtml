@@ -125,7 +125,10 @@
                                         <div id="crop-preview-photo" class="p-xxl-5 p-4" style="background:rgb(242 242 242 / 0.31)">
                                             <img id="preview_output_photo" src="#" class="img-fluid w-100" />
                                         </div>
-                                        <input id="campaign_Photo" asp-for="Base64String_Photo" style="display:none" />
+                                        <input id="campaign_Photo" asp-for="Base64String_Photo" style="display:none" required />
+                                        <div class="invalid-feedback">
+                                            Please choose image.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
