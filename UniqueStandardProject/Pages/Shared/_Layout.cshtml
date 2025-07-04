@@ -28,6 +28,7 @@
     <link href="~/assets/css/icons.min.css" rel="stylesheet" />
 
     @RenderSection("styles", required: false)
+
 </head>
 
 <body>
@@ -71,38 +72,74 @@
         <a href="./Index" class="navbar-brand d-flex align-items-center ps-4">
             <img src="~/frontend/img/BunnerLogo.png" style="width:150px;" />
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" style="margin-right:50px;">
+
+        <!-- Toggle button for collapsed navbar -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="margin-right:50px;">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a asp-page="./Index" class="nav-item nav-link active text-success">Home</a>
                 <a asp-page="./AboutUs" class="nav-item nav-link text-success">About Us</a>
-                @*<a asp-page="./Service" class="nav-item nav-link text-success">Service</a>*@
                 <a asp-page="./Activity" class="nav-item nav-link text-success">Activity</a>
+
+                <!-- Products Dropdown -->
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle text-success" data-toggle="dropdown">Products</a>
-                    <div class="dropdown-menu">
+                    <a href="#" class="nav-link dropdown-toggle text-success"
+                       id="productsDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Products
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-start" aria-labelledby="productsDropdown">
                         <a asp-page="./PremierCoatings" class="dropdown-item text-success">Premier Coatings</a>
                         <a asp-page="./HGG" class="dropdown-item text-success">HGG</a>
                         <a asp-page="./Olympus" class="dropdown-item text-success">Olympus</a>
                     </div>
                 </div>
+
+                <!-- Services Dropdown -->
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle text-success" data-toggle="dropdown">Services</a>
-                    <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#" class="nav-link dropdown-toggle text-success"
+                       id="servicesDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Services
+                    </a>
+                    <div class="dropdown-menu" id="dropdownService" aria-labelledby="servicesDropdown">
+                        <!-- Services populated dynamically via JS -->
                     </div>
                 </div>
+
+                <!-- Training Dropdown -->
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle text-success" data-toggle="dropdown">Training</a>
-                    <div class="dropdown-menu" id="dropdownWelding">
+                    <a href="#" class="nav-link dropdown-toggle text-success"
+                       id="trainingDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Training
+                    </a>
+                    <div class="dropdown-menu" id="dropdownWelding" aria-labelledby="trainingDropdown">
+                        <!-- Training options populated dynamically -->
                     </div>
                 </div>
+
                 <a asp-page="./Contact" class="nav-item nav-link text-success">Contact</a>
                 <a asp-page="./Login" class="nav-link text-success">LOGIN</a>
             </div>
         </div>
     </nav>
+
     <!-- Navbar End -->
     @RenderBody()
 
@@ -164,7 +201,11 @@
 
     <!-- JavaScript Libraries -->
     <script src="~/frontend/js/jquery-3.2.1.min.js"></script>
-    <script src="~/frontend/js/bootstrap.bundle.js"></script>
+    @* <script src="~/frontend/js/bootstrap.bundle.js"></script> *@
+
+    <!-- Bootstrap 5.0.0 JS bundle (includes Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/frontend/lib/wow/wow.min.js"></script>
     <script src="~/frontend/lib/easing/easing.min.js"></script>
     <script src="~/frontend/lib/waypoints/waypoints.min.js"></script>
@@ -176,14 +217,13 @@
 
     <!-- Template Javascript -->
     <script src="~/frontend/js/main.js"></script>
-
 </body>
 
 </html>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Function to fetch data from API
-        async function fetchData() {
+        async function serviceData() {
             try {
                 const response = await fetch('api/products/serviceTitle'); // Replace with your API URL
                 const res = await response.json();
@@ -192,12 +232,12 @@
                 const flattenedData = res.data.flat();
 
                 // Filter unique titles
-                const uniqueTitles = Array.from(new Set(flattenedData.map(item => item.title)))
+                const uniqueServicesTitles = Array.from(new Set(flattenedData.map(item => item.title)))
                     .map(title => {
                         return flattenedData.find(item => item.title === title);
                     });
 
-                populateDropdown(uniqueTitles);
+                populateDropdown(uniqueServicesTitles);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -205,7 +245,8 @@
 
         // Function to populate dropdown with data
         function populateDropdown(data) {
-            const dropdownMenu = document.getElementById('dropdownMenu');
+            const dropdownMenu = document.getElementById('dropdownService');
+            dropdownMenu.classList.add('dropdown-menu-start'); // ✅ ADD THIS
             dropdownMenu.innerHTML = ''; // Clear existing options
             data.forEach(item => {
                 const option = document.createElement('a');
@@ -216,6 +257,8 @@
                 dropdownMenu.appendChild(option);
             });
 
+
+
             // Add click event listener
             dropdownMenu.addEventListener('click', function (event) {
                 if (event.target && event.target.matches('a.dropdown-item')) {
@@ -225,47 +268,46 @@
                 }
             });
         }
-
         // Fetch and populate dropdown on page load
-        fetchData();
+        serviceData();
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Function to fetch data from API
+        //Function to fetch data from API
         async function WeldingData() {
             try {
-                const response = await fetch('api/products/weldingTitle'); // Replace with your API URL
+                const response = await fetch('api/products/weldingTitle'); //Replace with your API URL
                 const res = await response.json();
 
-                // // Flatten the array
+                //Flatten the array
                 const flattenedData = res.data.flat();
 
-                // Filter unique titles
-                const uniqueTitles = Array.from(new Set(flattenedData.map(item => item.title)))
+               // Filter unique titles
+                const uniqueWeldingTitles = Array.from(new Set(flattenedData.map(item => item.title)))
                     .map(title => {
                         return flattenedData.find(item => item.title === title);
                     });
 
-                populateDropdown(uniqueTitles);
+                populateDropdown(uniqueWeldingTitles);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-        // Function to populate dropdown with data
+        //Function to populate dropdown with data
         function populateDropdown(data) {
             const dropdownMenu = document.getElementById('dropdownWelding');
-            dropdownMenu.innerHTML = ''; // Clear existing options
+            dropdownMenu.innerHTML = ''; //Clear existing options
             data.forEach(item => {
                 const option = document.createElement('a');
                 option.href = '#';
                 option.className = 'dropdown-item text-success';
-                option.dataset.id = item.weldingId; // Use data-* attribute to store the ID
+                option.dataset.id = item.weldingId; //Use data-* attribute to store the ID
                 option.textContent = item.title;
                 dropdownMenu.appendChild(option);
             });
 
-            // Add click event listener
+            //Add click event listener
             dropdownMenu.addEventListener('click', function (event) {
                 if (event.target && event.target.matches('a.dropdown-item')) {
                     const selectedOption = event.target;
@@ -275,7 +317,7 @@
             });
         }
 
-        // Fetch and populate dropdown on page load
+        //Fetch and populate dropdown on page load
         WeldingData();
     });
 </script>

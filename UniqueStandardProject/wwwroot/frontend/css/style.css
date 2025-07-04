@@ -1,4 +1,4 @@
-/********** Template CSS **********/
+﻿/********** Template CSS **********/
 :root {
     --primary: #D81324;
     --secondary: #0B2154;
@@ -98,6 +98,14 @@
     }
 
 @media (max-width: 991.98px) {
+    .navbar .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
+        text-align: left !important;
+        transform: none !important;
+        left: 0 !important;
+    }
+
     .navbar-light .navbar-nav .nav-link {
         margin-right: 0;
         padding: 10px 0;
@@ -106,6 +114,7 @@
     .navbar-light .navbar-nav {
         border-top: 1px solid #EEEEEE;
     }
+
 }
 
 .navbar-light .navbar-brand,
@@ -382,3 +391,14 @@
             padding-right: 0;
             border-right: none;
         }
+
+@media (max-width: 414px) {
+    .dropdown-menu {
+        left: 0 !important;
+        right: auto !important;
+        transform: none !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+    }
+}
+
