@@ -27,6 +27,15 @@
     <!--Icons Css-->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" />
 
+    <style>
+        #dropdownService {
+            left: 0 !important;
+            right: auto !important;
+            transform: none !important;
+        }
+
+    </style>
+
     @RenderSection("styles", required: false)
 
 </head>
@@ -245,26 +254,25 @@
 
         // Function to populate dropdown with data
         function populateDropdown(data) {
-            const dropdownMenu = document.getElementById('dropdownService');
-            dropdownMenu.classList.add('dropdown-menu-start'); // ✅ ADD THIS
-            dropdownMenu.innerHTML = ''; // Clear existing options
+            dropdownService.innerHTML = ''; // Clear existing options
             data.forEach(item => {
                 const option = document.createElement('a');
                 option.href = '#';
                 option.className = 'dropdown-item text-success';
                 option.dataset.id = item.serviceId; // Use data-* attribute to store the ID
                 option.textContent = item.title;
-                dropdownMenu.appendChild(option);
+
+                dropdownService.appendChild(option);
             });
 
 
-
             // Add click event listener
-            dropdownMenu.addEventListener('click', function (event) {
+            dropdownService.addEventListener('click', function (event) {
                 if (event.target && event.target.matches('a.dropdown-item')) {
                     const selectedOption = event.target;
                     console.log('Selected:', selectedOption.textContent);
                     window.location.href = './service?serviceTitle=' + selectedOption.textContent;
+                    window.location.reload(); // Reload the page to reflect the change
                 }
             });
         }
