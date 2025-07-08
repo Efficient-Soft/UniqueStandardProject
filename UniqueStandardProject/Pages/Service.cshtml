@@ -7,32 +7,13 @@
     img {
         border-radius: 10px;
     }
-
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .dropdown{
-        text-align:center;
-        justify-items:center;
-        font-size: 20px;
-        font-weight:bold;
-    }
-
-    select {
-        padding: 10px;
-        font-size: 16px;
-    }
-
 </style>
 
 <!-- Service Start -->
 <div class="container-xxl py-5">
     <div class="container">
         <div class="row">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.2s">
                 <h1 class="mb-3 mt-3">Our Services</h1>
                 <h3 class="mb-3 mt-3" id="title"></h3>
             </div>
@@ -81,11 +62,11 @@
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageData = allData.slice(startIndex, endIndex);
-        generateHtml(pageData);
+        serviceHtml(pageData);
         updatePaginationButtons();
     };
 
-    const generateHtml = (data) => {
+    const serviceHtml = (data) => {
         data.sort((a, b) => a.sortOrder - b.sortOrder);
         var serviceTitle = null;
 
@@ -128,88 +109,5 @@
             renderPage(currentPage);
         }
     });
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // Function to fetch data from API
-    //     async function fetchData() {
-    //         try {
-    //             const response = await fetch('api/products/serviceTitle'); // Replace with your API URL
-    //             const res = await response.json();
-
-    //             // Flatten the array
-    //             const flattenedData = res.data.flat();
-
-    //             // Filter unique titles
-    //             const uniqueTitles = Array.from(new Set(flattenedData.map(item => item.title)))
-    //                 .map(title => {
-    //                     return flattenedData.find(item => item.title === title);
-    //                 });
-
-    //             populateDropdown(uniqueTitles);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     }
-
-    //     // Function to populate dropdown with data
-    //     function populateDropdown(data) {
-    //         const dropdownMenu = document.getElementById('dropdownMenu');
-    //         dropdownMenu.innerHTML = ''; // Clear existing options
-    //         data.forEach(item => {
-    //             // const option = document.createElement('a');
-    //             // option.value = item.id;
-    //             // option.textContent = item.title;
-    //             // dropdownMenu.appendChild(option);
-    //             const option = document.createElement('a');
-    //             option.href = '#';
-    //             option.className = 'dropdown-item text-success';
-    //             option.dataset.id = item.serviceId; // Use data-* attribute to store the ID
-    //             option.textContent = item.title;
-    //             dropdownMenu.appendChild(option);
-    //         });
-
-    //         // Add change event listener
-    //         // dropdownMenu.addEventListener('change', function () {
-    //         //     const selectedOption = dropdownMenu.options[dropdownMenu.selectedIndex];
-    //         //     console.log('Selected:', selectedOption.textContent);
-    //         //     PopulateService(selectedOption.textContent);
-    //         // });
-
-    //         // Add click event listener
-    //         dropdownMenu.addEventListener('click', function (event) {
-    //             if (event.target && event.target.matches('a.dropdown-item')) {
-    //                 const selectedOption = event.target;
-    //                 console.log('Selected:', selectedOption.textContent);
-    //                 PopulateService(selectedOption.textContent);
-    //             }
-    //         });
-
-    //     }
-
-    //     // Fetch and populate dropdown on page load
-    //     fetchData();
-
-    //     function PopulateService(title) {
-    //         fetch('api/products/getImage?title=' +title)
-    //             .then((res) => res.json())
-    //             .then((response) => {
-    //                 console.log(response.data);
-    //                 if (response.success) {
-    //                     if (Array.isArray(response.data)) {
-    //                         allData = response.data;
-    //                         allData.sort((a, b) => a.sortOrder - b.sortOrder);
-    //                         renderPage(currentPage);
-    //                     } else {
-    //                         console.error('The data received is not an array.');
-    //                     }
-    //                 } else {
-    //                     console.error('Request was not successful.');
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Error fetching data:', error);
-    //             });
-    //     }
-    // });
 
 </script>

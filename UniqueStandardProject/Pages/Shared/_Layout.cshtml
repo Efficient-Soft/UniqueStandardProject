@@ -261,7 +261,6 @@
                 option.className = 'dropdown-item text-success';
                 option.dataset.id = item.serviceId; // Use data-* attribute to store the ID
                 option.textContent = item.title;
-
                 dropdownService.appendChild(option);
             });
 
@@ -271,8 +270,8 @@
                 if (event.target && event.target.matches('a.dropdown-item')) {
                     const selectedOption = event.target;
                     console.log('Selected:', selectedOption.textContent);
+                    sessionStorage.setItem('navigateBackOnTogglerClick', 'true');
                     window.location.href = './service?serviceTitle=' + selectedOption.textContent;
-                    window.location.reload(); // Reload the page to reflect the change
                 }
             });
         }

@@ -393,12 +393,12 @@
         }
 
 @media (max-width: 414px) {
-    .dropdown-menu {
-        left: 0 !important;
-        right: auto !important;
-        transform: none !important;
+    .navbar .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
         text-align: left !important;
-        margin-left: 0 !important;
+        transform: none !important;
+        left: 0 !important;
     }
 }
 
