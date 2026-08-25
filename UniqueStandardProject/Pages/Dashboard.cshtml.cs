@@ -11,8 +11,10 @@ namespace UniqueStandardProject.Pages
     [Authorize]
     public class DashboardModel : PageModel
     {
-        public void OnGet()
+        // TODO: Restore the Dashboard UI when the dashboard feature is ready.
+        public IActionResult OnGet()
         {
+            return RedirectToPage("/Admin", new { area = "UserManage" });
         }
     }
 }
