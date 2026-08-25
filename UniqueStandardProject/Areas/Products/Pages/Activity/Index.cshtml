@@ -146,7 +146,7 @@
             ],
             order: [[1, "asc"]],
             "select": {
-                "style": 'os'
+                "style": 'single'
             },
             retrieve: true
         });
@@ -180,7 +180,7 @@
         $('#btnEdit').click(function () {
             $('#OptionModelLabel').text('Update Activity');
             $('#txtType').val('Edit');
-            var selectedItem = table.rows({ selected: true }).data()[0];
+            var selectedItem = table.row({ selected: true }).data();
             console.log(selectedItem);
             var image = '/images/thumbnail.jpg';
             if (selectedItem != null) {
@@ -197,7 +197,8 @@
             }
         });
 
-        $('#btnSubmit').click(function () {
+        $('#btnSubmit').click(function (event) {
+            event.preventDefault();
             var activityId = $('#activityId').val();
             var title = $('#txtTitle').val();
             var sortOrder = $('#txtSortOrder').val();
