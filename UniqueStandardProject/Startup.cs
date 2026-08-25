@@ -53,7 +53,13 @@ namespace UniqueStandardProject
 
             services.AddDatabaseDeveloperPageExceptionFilter();
            
-            services.AddRazorPages();
+            services.AddRazorPages(options =>
+            {
+                // Back-office pages must never be served to anonymous users.
+                options.Conventions.AuthorizeAreaFolder("Products", "/");
+                options.Conventions.AuthorizeAreaFolder("UserManage", "/");
+                options.Conventions.AuthorizePage("/Dashboard");
+            }).AddRazorRuntimeCompilation();
 
             services.AddTransient<IFileService, FileService>();
             // Add Infrastructure Layer
@@ -68,8 +74,6 @@ namespace UniqueStandardProject
 
             services.AddControllersWithViews();
             // TODO: Permision Razor Pages
-            services.AddRazorPages().AddRazorRuntimeCompilation();
-            //services.AddRazorPages(ConventionsAuthorizationPolicy).AddRazorRuntimeCompilation();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
@@ -83,9 +87,12 @@ namespace UniqueStandardProject
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
+                // Version the cookie name so previously issued cookies cannot bypass
+                // newly added authorization rules after deployment.
+                options.Cookie.Name = "UniqueStandardProject.Auth.v2";
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(1);
-                options.LoginPath = "/Index";
+                options.LoginPath = "/Login";
                 options.AccessDeniedPath = "/accessDenied";
                 options.SlidingExpiration = true;
             });
