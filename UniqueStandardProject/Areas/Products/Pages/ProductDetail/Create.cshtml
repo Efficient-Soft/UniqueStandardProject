@@ -85,7 +85,7 @@
                     <div class="form-group row mb-3">
                         <label>Description</label>
                         <div>
-                            <textarea id="taskdesc-editor" asp-for="Input.Description" readonly></textarea>
+                            <textarea id="taskdesc-editor" asp-for="Input.Description"></textarea>
                         </div>
                     </div>
                 </div>
@@ -274,9 +274,17 @@
                 items += "<option class='select2-item' value='" + state.productId + "'>" + state.product1 + "</option>";
             });
             $('#ddlProduct').html(items);
-            $('#ddlProduct').val(productId).change();
-            $('#Input_ProductId').val(productId);
-            $('#ddlProduct').prop('disabled', true);
+            if (productId) {
+                $('#ddlProduct').val(productId).change();
+                $('#Input_ProductId').val(productId);
+                $('#ddlProduct').prop('disabled', true);
+            } else {
+                $('#ddlProduct').prop('disabled', false);
+            }
+        });
+
+        $('#ddlProduct').change(function () {
+            $('#Input_ProductId').val($(this).val());
         });
 
        
