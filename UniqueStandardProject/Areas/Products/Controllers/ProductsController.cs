@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -85,6 +86,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("productDetail/delete")]
         public async Task<IActionResult> DeleteProduct(int detailId, int productId)
         {
@@ -112,6 +114,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("productDetail/edit")]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> EditProductDetail([FromForm] EditProductModel model)
@@ -310,6 +313,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("deleteImg")]
         public async Task<IActionResult> DeleteImages(int imageId)
         {
@@ -368,6 +372,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("distributor/delete")]
         public async Task<IActionResult> DeleteDistributor(int id)
         {
@@ -444,6 +449,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("service/delete")]
         public async Task<IActionResult> DeleteService(int serviceId)
         {
@@ -471,6 +477,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("service/edit")]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> EditService([FromForm] EditProductModel model)
@@ -511,6 +518,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         #endregion
 
         #region RelatedItem
+        [Authorize]
         [HttpPost("relatedProduct")]
         public async Task<IActionResult> GetRelated(int detailId, int detailId1)
         {
@@ -595,6 +603,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("activity/edit")]
         public async Task<IActionResult> EditActivity([FromForm] EditActivityModel model)
         {
@@ -633,6 +642,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
 
         }
 
+        [Authorize]
         [HttpPost("activity/delete")]
         public async Task<IActionResult> DeleteActivity(int activityId)
         {
@@ -693,6 +703,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("weldingtraining/edit")]
         public async Task<IActionResult> EditWeldingTraining([FromForm] EditWeldingTrainingModel model)
         {
@@ -730,6 +741,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost("weldingtraining/delete")]
         public async Task<IActionResult> DeleteWeldingTraining(int weldingId)
         {
