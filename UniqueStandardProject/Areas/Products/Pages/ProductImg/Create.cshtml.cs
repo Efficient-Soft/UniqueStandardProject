@@ -19,6 +19,7 @@ using UniqueStandardProject.Areas.UserManage.Models;
 using UniqueStandardProject.Data;
 using UniqueStandardProject.Entities;
 using UniqueStandardProject.Interfaces;
+using UniqueStandardProject.Services;
 
 namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
 {
@@ -110,7 +111,11 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductImg
             {
                 if (!string.IsNullOrEmpty(Base64String_Photo))
                 {
-                    byte[] bytes = Convert.FromBase64String(Base64String_Photo.Replace("data:image/jpeg;base64,", string.Empty));
+                    if (!ImageDataUrlParser.TryParse(Base64String_Photo, out byte[] bytes))
+                    {
+                        ModelState.AddModelError("", "The selected image is invalid. Please choose another image.");
+                        return Page();
+                    }
                     MemoryStream ms = new(bytes);
                     Image image = Image.FromStream(ms);
                     ms.Close();
