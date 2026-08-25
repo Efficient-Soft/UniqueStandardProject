@@ -35,7 +35,9 @@
 
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav gap-1">
+                    @* TODO: Re-enable the Dashboard/Home menu when the dashboard is ready.
                     <a asp-page="/Dashboard" class="nav-item nav-link px-xl-3 px-4">Home</a>
+                    *@
                     <a asp-page="/Admin" asp-area="UserManage" class="nav-item nav-link px-xl-3 px-4">Admin</a>
                     <a asp-page="/Product/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Product</a>
                     <a asp-page="/ProductDetail/Index" asp-area="Products" class="nav-item nav-link px-xl-3 px-4">Product Detail</a>
@@ -55,6 +57,15 @@
                         </div>
                     </div> *@
                 </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form class="d-flex ms-auto me-4" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/Login", new { area = "" })" method="post">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bx bx-power-off me-1"></i> Logout
+                        </button>
+                    </form>
+                }
             </div>
         </nav>
         <!-- Navbar End -->
