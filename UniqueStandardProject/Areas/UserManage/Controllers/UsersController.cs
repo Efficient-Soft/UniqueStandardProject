@@ -160,7 +160,17 @@ namespace UniqueStandardProject.Areas.UserManage.Controllers
                             Status = userInfo.Status,
                         };
 
-            user = await users.FirstOrDefaultAsync();
+            user = await users.FirstOrDefaultAsync(u => u.UserId == id);
+
+            if (user == null)
+            {
+                return NotFound(new ResponseModel()
+                {
+                    Success = false,
+                    Code = StatusCodes.Status404NotFound,
+                    Message = "User not found."
+                });
+            }
 
             return Ok(new ResponseModel()
             {
@@ -183,13 +193,24 @@ namespace UniqueStandardProject.Areas.UserManage.Controllers
                 if (ModelState.IsValid)
                 {
                     AspNetUser aspNetUser = await _context.AspNetUsers.FindAsync(model.UserId);
+                    UserInfo userInfo = await _context.UserInfos.FindAsync(model.UserId);
+
+                    if (aspNetUser == null || userInfo == null)
+                    {
+                        return NotFound(new ResponseModel()
+                        {
+                            Success = false,
+                            Code = StatusCodes.Status404NotFound,
+                            Message = "User not found."
+                        });
+                    }
+
                     aspNetUser.UserName = model.UserName;
                     aspNetUser.Email = model.Email;
                     aspNetUser.NormalizedEmail = model.Email.ToUpper();
                     aspNetUser.PhoneNumber = model.Phone;
                     _context.Attach(aspNetUser).State = EntityState.Modified;
 
-                    UserInfo userInfo = await _context.UserInfos.FindAsync(model.UserId);
                     userInfo.UserId = model.UserId;
                     userInfo.FullName = model.FullName;
                     userInfo.DetailAddress = model.DetailAddress;
