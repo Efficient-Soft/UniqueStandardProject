@@ -732,6 +732,7 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             if (welding != null)
             {
                 welding.Title = model.Title;
+                welding.Description = model.Description;
                 welding.SortOrder = model.SortOrder;
                 welding.UpdateDate = DateTime.Now;
                 welding.UpdateUser = User.Identity.Name;
