@@ -5,18 +5,59 @@
     Layout = "Shared/_BlankLayout.cshtml";
 }
 
-<div class="account-pages my-5 pt-sm-5">
+@section styles {
+    <style>
+        body {
+            background: linear-gradient(135deg, #f2f8f5 0%, #e7f0ec 50%, #f8faf9 100%);
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .login-card {
+            border: 0;
+            border-radius: 1rem;
+            box-shadow: 0 1rem 3rem rgba(31, 71, 54, .12);
+        }
+
+        .login-logo {
+            max-width: 220px;
+            max-height: 72px;
+            object-fit: contain;
+        }
+
+        .login-heading {
+            color: #244c3c;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
+}
+
+<div class="login-page">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-5">
-                <div class="card overflow-hidden">
-                    <div class="card-body pt-0">
-                        <div class="p-2">
+                <div class="card login-card overflow-hidden">
+                    <div class="card-body p-4 p-sm-5">
+                        <div class="text-center mb-4">
+                            <img src="~/assets/images/BunnerLogo.png" class="login-logo mb-3" alt="Unique Standard" />
+                            <h4 class="login-heading mb-1">Welcome back</h4>
+                            <p class="text-muted mb-0">Sign in to continue to the admin portal.</p>
+                        </div>
+                        <div>
                             <form class="form-horizontal" method="post">
-                                <div id="invalidUser" class="alert alert-warning">
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                                <div id="invalidUser" class="alert alert-warning" role="alert">
                                     <span>Invalid login!</span>
                                 </div>
-                                <div id="disableUser" class="alert alert-warning">
+                                <div id="disableUser" class="alert alert-warning" role="alert">
                                     <span>Account is currently disabled!</span>
                                 </div>
 
@@ -25,34 +66,36 @@
                                 </div> *@
 
                                 <div class="mb-3">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter username" asp-for="Input.UserName">
+                                    <label asp-for="Input.UserName" class="form-label">Username</label>
+                                    <input class="form-control form-control-lg" placeholder="Enter username" asp-for="Input.UserName" autocomplete="username" autofocus>
+                                    <span asp-validation-for="Input.UserName" class="text-danger small"></span>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Password</label>
+                                    <label asp-for="Input.Password" class="form-label">Password</label>
                                     <div class="input-group auth-pass-inputgroup">
-                                        <input type="password" class="form-control" placeholder="Enter password" aria-label="Password" asp-for="Input.Password" aria-describedby="password-addon">
+                                        <input class="form-control form-control-lg" placeholder="Enter password" asp-for="Input.Password" autocomplete="current-password" aria-describedby="password-addon">
                                         <button class="btn btn-light " type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                     </div>
+                                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
                                 </div>
 
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" asp-for="Input.RememberMe">
-                                    <label class="form-check-label" for="remember-check">
-                                        Remember me
-                                    </label>
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" asp-for="Input.RememberMe">
+                                    <label class="form-check-label" asp-for="Input.RememberMe">Remember me</label>
                                 </div>
 
-                                <div class="mt-3 d-grid">
-                                    <button id="btnSubmit" class="btn btn-primary waves-effect waves-light" type="submit">Log In</button>
+                                <div class="d-grid">
+                                    <button id="btnSubmit" class="btn btn-success btn-lg waves-effect waves-light" type="submit">
+                                        Log In <i class="mdi mdi-arrow-right ms-1"></i>
+                                    </button>
                                 </div>
                             </form>
                         </div>
 
                     </div>
                 </div>
-                <div class="mt-5 text-center">
+                <div class="mt-4 text-center text-muted">
                     <div>
                         <p>
                             ©
