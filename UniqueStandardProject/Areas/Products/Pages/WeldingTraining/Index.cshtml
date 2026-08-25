@@ -273,7 +273,7 @@
                 dataType: 'json',
                 success: function (data) {
                     notification('success', "Welding Training deleted Successfully", "Successfully!");
-                    table.ajax.reload;
+                    table.ajax.reload();
                 },
                 error: function (data) {
                     notification('warning', "Can't delete , This Welding Training is not deleted", "Warning!");
