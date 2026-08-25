@@ -43,12 +43,20 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Input == null || Input.ProductId <= 0)
+            {
+                ModelState.AddModelError("Input.ProductId", "Product is required.");
+            }
+
             if (string.IsNullOrEmpty(Base64String_Photo))
             {
                 ModelState.AddModelError("", "Product Image is required.");
             }
 
-
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
             Entities.ProductDetail productDetail = new()
             {
