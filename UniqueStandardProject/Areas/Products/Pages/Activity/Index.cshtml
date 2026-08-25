@@ -275,7 +275,7 @@
                 dataType:'json',
                 success: function (data) {
                     notification('success', "Activity deleted Successfully", "Successfully!");
-                    table.ajax.reload;
+                    table.ajax.reload();
                 },
                 error: function (data) {
                     notification('warning', "Can't delete , This Activity is not deleted", "Warning!");
