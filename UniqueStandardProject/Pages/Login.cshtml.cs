@@ -68,7 +68,7 @@ namespace UniqueStandardProject.Pages
                     IdentityUser user = await _signInManager.UserManager.FindByNameAsync(Input.UserName);
                     if (user != null)
                     {
-                        return RedirectToPage("/Dashboard");
+                        return RedirectToPage("/Admin", new { area = "UserManage" });
                     }
                 }
                 else
