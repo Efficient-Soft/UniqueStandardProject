@@ -142,7 +142,7 @@
             ],
             order: [[1, "asc"]],
             "select": {
-                "style": 'os'
+                "style": 'single'
             },
             retrieve: true
         });
@@ -174,18 +174,22 @@
         });
 
         $('#btnEdit').click(function () {
-            $('#OptionModelLabel').text('Update Welding Training');
+            $('#OptionModalLabel').text('Update Welding Training');
             $('#txtType').val('Edit');
-            var selectedItem = table.rows({ selected: true }).data()[0];
+            var selectedItem = table.row({ selected: true }).data();
             console.log(selectedItem);
             var image = '/images/thumbnail.jpg';
             if (selectedItem != null) {
                 $('#weldingId').val(selectedItem.weldingId);
                 $('#txtTitle').val(selectedItem.title);
                 $('#txtSortOrder').val(selectedItem.sortOrder);
-                var content = selectedItem.description;
-                tinyMCE.activeEditor.setContent(content);
                 $('#EditWeldingTraining').modal('show');
+                var weldingEditor = tinymce.get('taskdesc-editor');
+                if (weldingEditor) {
+                    weldingEditor.setContent(selectedItem.description || '');
+                } else {
+                    $('#taskdesc-editor').val(selectedItem.description || '');
+                }
 
                 if (selectedItem.img == null) {
                     $('#output').attr('src', image);
@@ -195,16 +199,20 @@
             }
         });
 
-        $('#btnSubmit').click(function () {
+        $('#btnSubmit').click(function (event) {
+            event.preventDefault();
             var activityId = $('#weldingId').val();
             var title = $('#txtTitle').val();
             var sortOrder = $('#txtSortOrder').val();
+            var weldingEditor = tinymce.get('taskdesc-editor');
+            var description = weldingEditor ? weldingEditor.getContent() : $('#taskdesc-editor').val();
 
             var formData = new FormData();
             var file = $('#fileToBeUploaded')[0];
             formData.append('weldingId', activityId);
             formData.append('title', title);
             formData.append('sortOrder', sortOrder);
+            formData.append('description', description);
             formData.append('image', file.files[0]);
 
             if ($('#txtType').val() == "Edit") {
