@@ -137,12 +137,13 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 using var stream = new MemoryStream();
                 ImageFile.CopyTo(stream);
-                var bytes = stream.ToArray();
-                string image = Convert.ToBase64String(bytes);
+                stream.Position = 0;
                 Image image1 = Image.FromStream(stream);
-                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
-                productDetail.Img = $"images/productDetail/{productDetail.DetailId}-{productDetail.ProductId}{extension}";
-                _imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg", "productDetail");
+                productDetail.Img = $"images/productDetail/{productDetail.DetailId}-{productDetail.ProductId}.jpg";
+                if (!_imageService.WriteImage(image1, productDetail.DetailId.ToString() + "-" + productDetail.ProductId.ToString(), $"{productDetail.DetailId}-{productDetail.ProductId}.jpg", "productDetail"))
+                {
+                    return BadRequest(new ResponseModel { Success = false, Code = StatusCodes.Status400BadRequest, Message = "Product detail image could not be saved." });
+                }
             }
 
             _context.Entry(productDetail).State = EntityState.Modified;
@@ -504,12 +505,13 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 using var stream = new MemoryStream();
                 ImageFile.CopyTo(stream);
-                var bytes = stream.ToArray();
-                string image = Convert.ToBase64String(bytes);
+                stream.Position = 0;
                 Image image1 = Image.FromStream(stream);
-                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
-                service.Img = $"images/service/{service.ServiceId}{extension}";
-                _imageService.WriteImage(image1, service.ServiceId.ToString(), $"{service.ServiceId}.jpg", "service");
+                service.Img = $"images/service/{service.ServiceId}.jpg";
+                if (!_imageService.WriteImage(image1, service.ServiceId.ToString(), $"{service.ServiceId}.jpg", "service"))
+                {
+                    return BadRequest(new ResponseModel { Success = false, Code = StatusCodes.Status400BadRequest, Message = "Service image could not be saved." });
+                }
             }
 
             _context.Attach(service).State = EntityState.Modified;
@@ -639,12 +641,13 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 using var stream = new MemoryStream();
                 ImageFile.CopyTo(stream);
-                var bytes = stream.ToArray();
-                string image = Convert.ToBase64String(bytes);
+                stream.Position = 0;
                 Image image1 = Image.FromStream(stream);
-                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
-                activity.Img = $"images/activity/{activity.ActivityId}{extension}";
-                _imageService.WriteImage(image1, activity.ActivityId.ToString(), $"{activity.ActivityId}.jpg", "activity");
+                activity.Img = $"images/activity/{activity.ActivityId}.jpg";
+                if (!_imageService.WriteImage(image1, activity.ActivityId.ToString(), $"{activity.ActivityId}.jpg", "activity"))
+                {
+                    return BadRequest(new ResponseModel { Success = false, Code = StatusCodes.Status400BadRequest, Message = "Activity image could not be saved." });
+                }
             }
 
             _context.Attach(activity).State = EntityState.Modified;
@@ -744,12 +747,13 @@ namespace UniqueStandardProject.Areas.Products.Controllers
             {
                 using var stream = new MemoryStream();
                 ImageFile.CopyTo(stream);
-                var bytes = stream.ToArray();
-                string image = Convert.ToBase64String(bytes);
+                stream.Position = 0;
                 Image image1 = Image.FromStream(stream);
-                string extension = ("." + ImageFile.FileName.Split('.')[^1]).ToLower();
-                welding.Img = $"images/welding/{welding.WeldingId}{extension}";
-                _imageService.WriteImage(image1, welding.WeldingId.ToString(), $"{welding.WeldingId}.jpg", "welding");
+                welding.Img = $"images/welding/{welding.WeldingId}.jpg";
+                if (!_imageService.WriteImage(image1, welding.WeldingId.ToString(), $"{welding.WeldingId}.jpg", "welding"))
+                {
+                    return BadRequest(new ResponseModel { Success = false, Code = StatusCodes.Status400BadRequest, Message = "Welding training image could not be saved." });
+                }
             }
 
             _context.Attach(welding).State = EntityState.Modified;
