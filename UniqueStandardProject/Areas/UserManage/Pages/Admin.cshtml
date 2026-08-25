@@ -151,7 +151,7 @@
             ],
             columnDefs: [{ type: 'date-dd-mmm-yyyy', targets: 6 }],
             "select": {
-                "style": 'os'
+                "style": 'single'
             },
             retrieve: true
         });
@@ -166,9 +166,10 @@
         });
 
         $('#btnCreate').click(function () {
-
+            ResetItem();
             $('#txtType').val('Create');
             $('#OptionModelLabel').text('Create New User');
+            $('.pwRow').show();
             $('#userModel').modal('show');
         });
 
@@ -179,7 +180,7 @@
             //Hide password row
             $('.pwRow').hide();
 
-            var selectedItem = table.rows({ selected: true }).data()[0];
+            var selectedItem = table.row({ selected: true }).data();
 
             if (selectedItem != null) {
                 console.log(selectedItem);
@@ -201,7 +202,8 @@
             }
         })
 
-        $('#btnUserSubmit').click(function () {
+        $('#btnUserSubmit').click(function (event) {
+            event.preventDefault();
             var userId = $('#userId').val();
             var userName = $('#txtUserName').val();
             var fullName = $('#txtFullName').val();
@@ -309,6 +311,8 @@
         });
 
         function ResetItem() {
+            $('#userId').val('');
+            $('#usersform').removeClass('was-validated');
             $('#txtUserName').val('');
             $('#txtUserName').prop('disabled', false);
             $('#txtFullName').val('');
