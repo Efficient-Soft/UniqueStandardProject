@@ -26,7 +26,7 @@
     <div id="layout-wrapper">
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-md bg-white navbar-light shadow sticky-top p-0 mb-3">
-            <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <a asp-page="/Index" asp-area="" class="navbar-brand d-flex align-items-center px-4 px-lg-5" title="Back to landing page">
                 <img src="~/frontend/img/BunnerLogo.png" style="width:200px;" />
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -60,7 +60,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <form class="d-flex ms-auto me-4" asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="@Url.Page("/Login", new { area = "" })" method="post">
+                          asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post">
                         <button type="submit" class="btn btn-outline-danger">
                             <i class="bx bx-power-off me-1"></i> Logout
                         </button>
