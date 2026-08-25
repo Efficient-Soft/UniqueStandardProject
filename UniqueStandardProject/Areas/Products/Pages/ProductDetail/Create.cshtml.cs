@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 using UniqueStandardProject.Data;
 using UniqueStandardProject.Interfaces;
+using UniqueStandardProject.Services;
 
 namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
 {
@@ -53,6 +54,13 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
                 ModelState.AddModelError("", "Product Image is required.");
             }
 
+            byte[] imageBytes = null;
+            if (!string.IsNullOrEmpty(Base64String_Photo) &&
+                !ImageDataUrlParser.TryParse(Base64String_Photo, out imageBytes))
+            {
+                ModelState.AddModelError("", "The selected image is invalid. Please choose another image.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -75,8 +83,7 @@ namespace UniqueStandardProject.Areas.Products.Pages.ProductDetail
             {
                 if (!string.IsNullOrEmpty(Base64String_Photo))
                 {
-                    byte[] bytes = Convert.FromBase64String(Base64String_Photo.Replace("data:image/jpeg;base64,", string.Empty));
-                    MemoryStream ms = new(bytes);
+                    MemoryStream ms = new(imageBytes);
                     Image image = Image.FromStream(ms);
                     ms.Close();
                     if (_imageService.WriteImage(image, $"{productDetail.DetailId}-{Input.ProductId}", $"{productDetail.DetailId}-{Input.ProductId}.jpg", "productDetail"))
