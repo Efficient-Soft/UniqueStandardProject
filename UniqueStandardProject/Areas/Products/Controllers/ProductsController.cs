@@ -120,6 +120,10 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> EditProductDetail([FromForm] EditProductModel model)
         {
             Entities.ProductDetail productDetail = await _context.ProductDetails.Where(p => p.DetailId == model.DetailId && p.ProductId == model.ProductId).FirstOrDefaultAsync();
+            if (productDetail == null)
+            {
+                return NotFound(new ResponseModel { Success = false, Code = StatusCodes.Status404NotFound, Message = "Product detail not found." });
+            }
             if (productDetail != null)
             {
                 productDetail.SortOrder = model.SortOrder;
@@ -483,6 +487,10 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> EditService([FromForm] EditProductModel model)
         {
             Entities.ServiceTbl service = await _context.ServiceTbls.Where(p => p.ServiceId == model.ServiceId).FirstOrDefaultAsync();
+            if (service == null)
+            {
+                return NotFound(new ResponseModel { Success = false, Code = StatusCodes.Status404NotFound, Message = "Service not found." });
+            }
             if (service != null)
             {
                 service.SortOrder = model.SortOrder;
@@ -523,6 +531,11 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> GetRelated(int detailId, int detailId1)
         {
             var productDetail = await _context.ProductDetails.FirstOrDefaultAsync(p => p.DetailId == detailId);
+
+            if (productDetail == null)
+            {
+                return NotFound(new ResponseModel { Success = false, Code = StatusCodes.Status404NotFound, Message = "Product detail not found." });
+            }
 
             List<string> relatedItem = new List<string>();
 
@@ -608,6 +621,10 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> EditActivity([FromForm] EditActivityModel model)
         {
             Entities.Activity activity = await _context.Activities.FirstOrDefaultAsync(a => a.ActivityId == model.ActivityId);
+            if (activity == null)
+            {
+                return NotFound(new ResponseModel { Success = false, Code = StatusCodes.Status404NotFound, Message = "Activity not found." });
+            }
             if (activity != null)
             {
                 activity.Title = model.Title;
@@ -708,6 +725,10 @@ namespace UniqueStandardProject.Areas.Products.Controllers
         public async Task<IActionResult> EditWeldingTraining([FromForm] EditWeldingTrainingModel model)
         {
             Entities.WeldingTraining welding = await _context.WeldingTrainings.FirstOrDefaultAsync(a => a.WeldingId == model.WeldingId);
+            if (welding == null)
+            {
+                return NotFound(new ResponseModel { Success = false, Code = StatusCodes.Status404NotFound, Message = "Welding training not found." });
+            }
             if (welding != null)
             {
                 welding.Title = model.Title;
