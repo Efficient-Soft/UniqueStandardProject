@@ -154,7 +154,7 @@
 			],
             order: [[1, "asc"]],
 			"select": {
-				"style": 'os'
+				"style": 'single'
 			},
 			retrieve: true
 		});
@@ -195,16 +195,20 @@
         $('#btnEdit').click(function () {
             $('#OptionModelLabel').text('Update Service');
             $('#txtType').val('Edit');
-            var selectedItem = table.rows({ selected: true }).data()[0];
+            var selectedItem = table.row({ selected: true }).data();
             var image = '/images/thumbnail.jpg';
             if (selectedItem != null) {
                 $('#serviceId').val(selectedItem.serviceId);
                 $('#txtSort').val(selectedItem.sortOrder);
                 $('#txtTitle1').val(selectedItem.title);
                 console.log(selectedItem);
-                var content = selectedItem.desctiption;
-                tinyMCE.activeEditor.setContent(content);
                 $('#EditService').modal('show');
+                var serviceEditor = tinymce.get('editor');
+                if (serviceEditor) {
+                    serviceEditor.setContent(selectedItem.desctiption || '');
+                } else {
+                    $('#editor').val(selectedItem.desctiption || '');
+                }
 
                 if (selectedItem.img == null) {
                     $('#output').attr('src', image);
@@ -217,12 +221,14 @@
         //#endregion
 
         //Add service to database
-        $('#btnService').click(function () {
+        $('#btnService').click(function (event) {
+            event.preventDefault();
 
             var serviceId = $('#serviceId').val();
             var title = $('#txtTitle1').val();
             var sortOrder = $('#txtSort').val();
-            var desc = tinyMCE.activeEditor.getContent();
+            var serviceEditor = tinymce.get('editor');
+            var desc = serviceEditor ? serviceEditor.getContent() : $('#editor').val();
             var formData = new FormData();
             var file = $('#fileToBeUploaded')[0];
             formData.append('serviceId', serviceId);
