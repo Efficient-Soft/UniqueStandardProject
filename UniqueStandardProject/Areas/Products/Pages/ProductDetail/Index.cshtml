@@ -163,7 +163,7 @@
             ],
             order: [[1, "asc"]],
             "select": {
-                "style": 'os'
+                "style": 'single'
             },
             retrieve: true
         });
@@ -192,15 +192,18 @@
 
         $('#btnCreate').click(function () {
             let productId = $('#ddlProduct').val();
-            if (productId !== undefined && productId!=='' && productId !== null)
-                window.location.href = `productDetail/Create?productId=${productId}`;
+            let createUrl = '/products/productdetail/create';
+            if (productId !== undefined && productId !== '' && productId !== null) {
+                createUrl += `?productId=${encodeURIComponent(productId)}`;
+            }
+            window.location.href = createUrl;
         });
 
         //Update user modal popup
         $('#btnEdit').click(function () {
             $('#OptionModelLabel').text('Update Product Detail');
             $('#txtType').val('Edit');
-            var selectedItem = table.rows({ selected: true }).data()[0];
+            var selectedItem = table.row({ selected: true }).data();
             var image = '/images/thumbnail.jpg';
 
             if (selectedItem != null) {
@@ -208,11 +211,15 @@
                 $('#productId').val(selectedItem.productId);
                 $('#txtSortOrder').val(selectedItem.sortOrder);
                 $('#txtTitle').val(selectedItem.title);
-                var content = selectedItem.description;
-                tinyMCE.activeEditor.setContent(content);
                 $('#ddlProductDetail').val(selectedItem.productId).change();
                 $('#ddlProductDetail').prop('disabled', true);
                 $('#EditProductDetail').modal('show');
+                var detailEditor = tinymce.get('taskdesc-editor');
+                if (detailEditor) {
+                    detailEditor.setContent(selectedItem.description || '');
+                } else {
+                    $('#taskdesc-editor').val(selectedItem.description || '');
+                }
 
                 if (selectedItem.img == null) {
                     $('#output').attr('src', image);
@@ -224,13 +231,15 @@
         });
 
         //Add product detail to database
-        $('#btnSubmit').click(function () {
+        $('#btnSubmit').click(function (event) {
+            event.preventDefault();
 
             var detailId = $('#detailId').val();
             var productId = $('#productId').val();
             var sortOrder = $('#txtSortOrder').val();
             var title = $('#txtTitle').val();
-            var desc = tinymce.activeEditor.getContent();
+            var detailEditor = tinymce.get('taskdesc-editor');
+            var desc = detailEditor ? detailEditor.getContent() : $('#taskdesc-editor').val();
             console.log(desc);
             var productDetail = $('#ddlProductDetail option:selected').val();
 
